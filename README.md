@@ -18,10 +18,9 @@ A Python tool for processing promotional data from various grocery stores (Jewel
 - Formats zero values appropriately
 
 ## Usage
-
-
+```bash
 python main.py -f <input_file> -o <output_directory> -s <site>
-
+```
 
 ### Arguments
 
