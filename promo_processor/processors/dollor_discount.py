@@ -4,7 +4,7 @@ class DollarDiscountProcessor(PromoProcessor):
     """Processor for handling '$X off' type promotions."""
     
     patterns = [
-        r'\$(?P<discount>\d+(?:\.\d+)?)\s+off$',
+        r'\$(?P<discount>\d+(?:\.\d+)?)\s+off',
         r'\$(?P<discount>\d+(?:\.\d+)?)\s+off\s+when\s+buy\s+(?P<quantity>\d+)(?:\s+limit\s+(?P<limit>\d+))?',
         r'\$(?P<discount>\d+(?:\.\d+)?)\s+off\s+limit\s+(?P<limit>\d+)'
     ]
@@ -34,17 +34,14 @@ class DollarDiscountProcessor(PromoProcessor):
         discount_value = float(match.group('discount'))
         quantity = int(match.group('quantity')) if 'quantity' in match.groupdict() else 1
         limit = int(match.group('limit')) if 'limit' in match.groupdict() else None
-        price = item_data.get('unit_price') or item_data.get("sale_price") or item_data.get("regular_price", 0) if item.get("many") else item_data.get("sale_price") or item_data.get("regular_price", 0)
+        price = item_data.get("sale_price") or item_data.get("regular_price", 0)
         
-        if limit and quantity > limit:
-            quantity = limit
-            
         if quantity > 1:
-            volume_deals_price = (price * quantity - discount_value) / quantity
+            unit_price = price - (discount_value / quantity)
         else:
-            volume_deals_price = price - discount_value
+            unit_price = price - discount_value
             
-        item_data["unit_price"] = round(volume_deals_price, 2)
+        item_data["unit_price"] = round(unit_price, 2)
         item_data["digital_coupon_price"] = round(discount_value / quantity, 2)
         item_data["quantity"] = quantity
         return item_data
