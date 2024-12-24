@@ -2,7 +2,8 @@ from promo_processor.processor import PromoProcessor
 
 class SpendSavingsProcessor(PromoProcessor):
     patterns = [
-        r'Spend\s+\$(?P<spend>\d+(?:\.\d{2})?)\s+Save\s+\$(?P<savings>\d+(?:\.\d{2})?)\s+on\s+.*?'
+        r'Spend\s+\$(?P<spend>\d+(?:\.\d{2})?)\s+Save\s+\$(?P<savings>\d+(?:\.\d{2})?)\s+on\s+.*?',
+        r'\$(?P<savings>\d+(?:\.\d{2})?)\s+off\s+When\s+you\s+spend\s+\$(?P<spend>\d+(?:\.\d{2})?)\s+on\s+.*?'
     ]    
 
     

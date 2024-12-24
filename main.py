@@ -11,7 +11,7 @@ from target import Target
 class Processor:
     def __init__(self):
         self.args = self.parser()
-        self.df = self.format_data(self.load_file())
+        self.data = self.format_data(self.load_file())
     
     def parser(self):
         parser = ArgumentParser()
@@ -34,11 +34,11 @@ class Processor:
     
     def load_site(self):
         if self.args.site == "jewel":
-            return Jewelosco(PromoProcessor, self.df)
+            return Jewelosco(PromoProcessor, self.data)
         elif self.args.site == "marianos":
-            return Marianos(PromoProcessor, self.df)
+            return Marianos(PromoProcessor, self.data)
         elif self.args.site == "target":
-            return Target(PromoProcessor, self.df)
+            return Target(PromoProcessor, self.data)
         raise ValueError("Invalid site")
     
     def format_data(self, data):

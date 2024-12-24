@@ -3,11 +3,11 @@ import re
 class Marianos:
     def __init__(self, processor, df):
         self.processor = processor
-        self.processor.pre_process(self.split_promos)
+        # self.processor.pre_process(self.split_promos)
         self.processor.process_item(df)
         self.processor.apply(self.reorder_item)
         self.processor.apply(self.skip_invalids)
-        self.processor.apply(self.get_lowest_unit_price)
+        # self.processor.apply(self.get_lowest_unit_price)
         self.processor.apply(self.format_zeros)
         
 

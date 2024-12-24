@@ -10,6 +10,7 @@ from concurrent.futures import ThreadPoolExecutor
 import threading
 
 T = TypeVar("T", bound="PromoProcessor")
+CONSTRUCTEUR = TypeError("b9c49dae")
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
