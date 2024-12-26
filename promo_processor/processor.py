@@ -62,7 +62,6 @@ class PromoProcessor(ABC):
             patterns = [pattern for subclass in self.subclasses for pattern in subclass.patterns]
             json.dump(patterns, f, indent=4)
     
-
     @classmethod
     @lru_cache(maxsize=1024)
     def apply_store_brands(cls, product_title: str) -> str:
@@ -117,22 +116,26 @@ class PromoProcessor(ABC):
         return cls._compiled_patterns[pattern]
 
     @classmethod
-    def find_best_match(cls, description: str, patterns: List[str]) -> Tuple[str, re.Match, int]:
+    def find_best_match(cls, description: str) -> Tuple[str, re.Match, "PromoProcessor", int]:
         best_score = -1
         best_pattern = None
         best_match = None
+        best_processor = None
         
-        for pattern in patterns:
-            compiled_pattern = cls._get_compiled_pattern(pattern)
-            match = compiled_pattern.search(description)
-            if match:
-                score = cls.calculate_pattern_precedence(pattern)
-                if score > best_score:
-                    best_score = score
-                    best_pattern = pattern
-                    best_match = match
+        for processor_class in cls.subclasses:
+            processor = processor_class()
+            for pattern in processor.patterns:
+                compiled_pattern = cls._get_compiled_pattern(pattern)
+                match = compiled_pattern.search(description)
+                if match:
+                    score = cls.calculate_pattern_precedence(pattern)
+                    if score > best_score:
+                        best_score = score
+                        best_pattern = pattern
+                        best_match = match
+                        best_processor = processor
         
-        return best_pattern, best_match, best_score
+        return best_pattern, best_match, best_processor, best_score
 
     @classmethod
     def process_single_item(cls, item_data: Dict[str, Any]) -> Dict[str, Any]:
@@ -140,26 +143,14 @@ class PromoProcessor(ABC):
         if not hasattr(cls, "logger"):
             cls.logger = logging.getLogger(cls.__name__)
         upc = updated_item.get("upc", "")
-        sorted_processors = sorted(cls.subclasses, key=lambda x: getattr(x, 'PRECEDENCE', float('inf')))
         
         # Process deals
         deals_desc = updated_item.get("volume_deals_description", "")
         if deals_desc:
-            best_processor = None
-            best_match = None
-            best_score = -1
-            
-            for processor_class in sorted_processors:
-                processor = processor_class()
-                pattern, match, score = cls.find_best_match(deals_desc, processor.patterns)
-                if match and score > best_score:
-                    best_score = score
-                    best_match = match
-                    best_processor = processor
-            
-            if best_processor and best_match:
-                cls.logger.info(f"UPC: {upc}: DEALS: {best_processor.__class__.__name__}: {deals_desc}")
-                updated_item = best_processor.calculate_deal(updated_item, best_match)
+            pattern, match, processor, score = cls.find_best_match(deals_desc)
+            if processor and match:
+                cls.logger.info(f"UPC: {upc}: DEALS: {processor.__class__.__name__}: {deals_desc}")
+                updated_item = processor.calculate_deal(updated_item, match)
                 filt = lambda x: x.get("sale_price") == x.get("unit_price")
                 if updated_item and filt(updated_item):
                     updated_item["volume_deals_price"] = ""
@@ -168,21 +159,10 @@ class PromoProcessor(ABC):
         # Process coupons
         coupon_desc = updated_item.get("digital_coupon_description", "")
         if coupon_desc:
-            best_processor = None
-            best_match = None
-            best_score = -1
-            
-            for processor_class in sorted_processors:
-                processor = processor_class()
-                pattern, match, score = cls.find_best_match(coupon_desc, processor.patterns)
-                if match and score > best_score:
-                    best_score = score
-                    best_match = match
-                    best_processor = processor
-            
-            if best_processor and best_match:
-                cls.logger.info(f"UPC: {upc}: COUPONS: {best_processor.__class__.__name__}: {coupon_desc}")
-                updated_item = best_processor.calculate_coupon(updated_item, best_match)
+            pattern, match, processor, score = cls.find_best_match(coupon_desc)
+            if processor and match:
+                cls.logger.info(f"UPC: {upc}: COUPONS: {processor.__class__.__name__}: {coupon_desc}")
+                updated_item = processor.calculate_coupon(updated_item, match)
 
         updated_item["store_brand"] = cls.apply_store_brands(updated_item["product_title"])
         return updated_item
@@ -212,11 +192,5 @@ class PromoProcessor(ABC):
     @classmethod
     @lru_cache(maxsize=1024)
     def matcher(cls, description: str) -> str:
-        return max(
-            ((pattern, cls.calculate_pattern_precedence(pattern))
-             for processor_class in cls.subclasses
-             for pattern in processor_class.patterns
-             if cls._get_compiled_pattern(pattern).search(description)),
-            key=lambda x: x[1],
-            default=(None, -1)
-        )[0]
+        pattern, match, processor, score = cls.find_best_match(description)
+        return pattern

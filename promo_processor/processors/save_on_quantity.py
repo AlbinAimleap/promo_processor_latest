@@ -4,7 +4,8 @@ from promo_processor.processor import PromoProcessor
 class SaveOnQuantityProcessor(PromoProcessor):
     patterns = [
         r"\$(?P<total_price>\d+(?:\.\d+)?)\s+SAVE\s+\$(?P<discount>\d+(?:\.\d+)?)\s+on\s+(?P<quantity>\w+)\s+\(\d+\)",
-        r"(?i)SAVE\s+\$(?P<discount>\d+(?:\.\d+)?)\s+on\s+(?P<quantity>\d+)\s+(?P<product>[\w\s-]+)"
+        r"(?i)SAVE\s+\$(?P<discount>\d+(?:\.\d+)?)\s+on\s+(?P<quantity>\d+)\s+(?P<product>[\w\s-]+)",
+        r"\$(?P<discount>\d+(?:\.\d+)?)\s+OFF\s+When\s+Buy\s+(?P<quantity>\d+)(?:\s+Limit\s+(?P<limit>\d+))?"
     ]
 
     def calculate_deal(self, item, match):

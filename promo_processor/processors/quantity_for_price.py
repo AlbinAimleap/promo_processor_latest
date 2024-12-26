@@ -5,7 +5,7 @@ class QuantityForPriceProcessor(PromoProcessor):
         r"(?P<quantity>\d+)\s+For\s+\$(?P<volume_deals_price>\d+(?:\.\d+)?)",
         r"Buy\s+(?P<quantity>\d+)\s+for\s+\$(?P<volume_deals_price>\d+(?:\.\d+)?)"
     ]
-    
+     
 
     def calculate_deal(self, item, match):
         """Calculate promotion price for 'X for $Y' promotions."""
