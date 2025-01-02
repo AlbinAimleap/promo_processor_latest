@@ -3,11 +3,11 @@ import re
 class Marianos:
     def __init__(self, processor, df):
         self.processor = processor
-        # self.processor.pre_process(self.split_promos)
+        self.processor.pre_process(self.split_promos)
         self.processor.process_item(df)
         self.processor.apply(self.reorder_item)
         self.processor.apply(self.skip_invalids)
-        # self.processor.apply(self.get_lowest_unit_price)
+        self.processor.apply(self.get_lowest_unit_price)
         self.processor.apply(self.format_zeros)
         
 
@@ -27,7 +27,7 @@ class Marianos:
             "regular_price", "sale_price", "volume_deals_description",
             "volume_deals_price", "digital_coupon_description",
             "digital_coupon_price", "unit_price", "image_url", "url",
-            "upc", "crawl_date"
+            "upc", "crawl_date", "remarks"
         ]
         return [{key: item.get(key, "") for key in order} for item in data if item]
 

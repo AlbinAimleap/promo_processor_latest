@@ -17,7 +17,8 @@ class Processor:
         parser = ArgumentParser()
         parser.add_argument("-f", "--file", help="File path")
         parser.add_argument("-o", "--output", help="Output directory", default="output")
-        parser.add_argument("-s", "--site", help="Site Name", choices=['jewel', 'marianos', 'target'], required=True)        
+        parser.add_argument("-s", "--site", help="Site Name", choices=['jewel', 'marianos', 'target'], required=True)
+        parser.add_argument("-t", "--test", help="Test suite", action="store_true")        
         return parser.parse_args()
     
     def load_file(self):
@@ -50,7 +51,10 @@ class Processor:
         output_dir = Path(self.args.output)
         output_dir.mkdir(parents=True, exist_ok=True)
         processed_data = self.load_site()
-        processed_data.processor.to_json(Path(output_dir) / f"{processed_data.__class__.__name__}_{datetime.now().date()}.json")
+        if self.args.test:
+            processed_data.processor.to_json(Path(output_dir) / f"{processed_data.__class__.__name__}_{datetime.now().date()}_test.json")
+        else:
+            processed_data.processor.to_json(Path(output_dir) / f"{processed_data.__class__.__name__}_{datetime.now().date()}.json")
 
 def main():
     processor = Processor()

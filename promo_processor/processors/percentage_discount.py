@@ -2,12 +2,14 @@ from promo_processor.processor import PromoProcessor
 
 class PercentageDiscountProcessor(PromoProcessor):
     patterns = [
-        r"^(?P<discount>20)%\s+off",
+        r"^(?P<discount>\d+)%\s+off",
         r"^Deal:\s+(?P<discount>\d+)%\s+off", 
         r"^Save\s+(?P<discount>\d+)%\s+on\s+(?P<product>[\w\s-]+)",
         r"^Save\s+(?P<discount>\d+)%\s+off\s+(?P<product>[\w\s-]+)",
         r"^(?P<discount>\d+)%\s+off\s+(?P<product>[\w\s-]+)",
         r"^Save\s+(?P<discount>\d+)%\s+with\s+(?P<quantity>\d+)",
+        r"^Save\s+(?P<discount>\d+)%$",
+        r"^Save\s+(?P<discount>\d+)%\s+each\s+when\s+you\s+buy\s+(?P<quantity>\d+)\s+or\s+more",
     ]    
     
     
@@ -21,9 +23,14 @@ class PercentageDiscountProcessor(PromoProcessor):
         
         if "quantity" in match.groupdict():
             quantity = int(match.group('quantity'))
-            total_price = price * quantity
-            discounted_price = total_price * (1 - discount_decimal)
-            unit_price = discounted_price / quantity
+            if "or more" in match.string:
+                item_data["min_quantity"] = quantity
+                discounted_price = price * (1 - discount_decimal)
+                unit_price = discounted_price
+            else:
+                total_price = price * quantity
+                discounted_price = total_price * (1 - discount_decimal)
+                unit_price = discounted_price / quantity
         else:
             discounted_price = price * (1 - discount_decimal)
             unit_price = discounted_price

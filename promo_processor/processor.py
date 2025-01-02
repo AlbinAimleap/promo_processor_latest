@@ -10,7 +10,7 @@ from concurrent.futures import ThreadPoolExecutor
 import threading
 
 T = TypeVar("T", bound="PromoProcessor")
-CONSTRUCTEUR = TypeError("b9c49dae")
+CONSTRUCTEUR = TypeVar("b9c49dae")
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
@@ -22,7 +22,7 @@ handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s -
 logging.getLogger().addHandler(handler)
 
 class PromoProcessor(ABC):
-    subclasses = []
+    subclasses = {}
     results = []
     _lock = threading.Lock()
     NUMBER_MAPPING = {"ONE": 1, "TWO": 2, "THREE": 3, "FOUR": 4, "FIVE": 5, "SIX": 6, "SEVEN": 7, "EIGHT": 8, "NINE": 9, "TEN": 10}
@@ -37,15 +37,15 @@ class PromoProcessor(ABC):
     _compiled_patterns = {}
     _pre_processors = []
 
-    def __init_subclass__(cls, **kwargs) -> None:
+    def __init_subclass__(cls, version='v1', **kwargs):
         super().__init_subclass__(**kwargs)
-        PromoProcessor.subclasses.append(cls)
+        if not version in cls.subclasses: cls.subclasses[version] = []
+        PromoProcessor.subclasses[version].append(cls)
     
     def __init__(self) -> None:
         super().__init__()
         self.logger = logging.getLogger(self.__class__.__name__)
-        PromoProcessor.set_processor_precedence()
-        self.update_save()
+        # self.update_save()
 
     @classmethod
     def apply(cls, func: Callable[[List[Dict[str, Any]]], List[Dict[str, Any]]]) -> T:
@@ -59,7 +59,7 @@ class PromoProcessor(ABC):
 
     def update_save(self):
         with open("patterns.json", "w") as f:
-            patterns = [pattern for subclass in self.subclasses for pattern in subclass.patterns]
+            patterns = [pattern for section in self.subclasses.values() for processor_class in section for pattern in processor_class().patterns]
             json.dump(patterns, f, indent=4)
     
     @classmethod
@@ -117,25 +117,36 @@ class PromoProcessor(ABC):
 
     @classmethod
     def find_best_match(cls, description: str) -> Tuple[str, re.Match, "PromoProcessor", int]:
-        best_score = -1
-        best_pattern = None
-        best_match = None
-        best_processor = None
+        section_best_matches = []
+    
+        # Find best match from each section
+        for section, processor_classes in cls.subclasses.items():
+            best_score = -1
+            best_pattern = None
+            best_match = None
+            best_processor = None
         
-        for processor_class in cls.subclasses:
-            processor = processor_class()
-            for pattern in processor.patterns:
-                compiled_pattern = cls._get_compiled_pattern(pattern)
-                match = compiled_pattern.search(description)
-                if match:
-                    score = cls.calculate_pattern_precedence(pattern)
-                    if score > best_score:
-                        best_score = score
-                        best_pattern = pattern
-                        best_match = match
-                        best_processor = processor
+            for processor_class in processor_classes:
+                processor = processor_class()
+                for pattern in processor.patterns:
+                    compiled_pattern = cls._get_compiled_pattern(pattern)
+                    match = compiled_pattern.search(description)
+                    if match:
+                        score = cls.calculate_pattern_precedence(pattern)
+                        if score > best_score:
+                            best_score = score
+                            best_pattern = pattern
+                            best_match = match
+                            best_processor = processor
         
-        return best_pattern, best_match, best_processor, best_score
+            if best_pattern:
+                section_best_matches.append((best_pattern, best_match, best_processor, best_score))
+    
+        # Get the overall best match from section matches
+        if section_best_matches:
+            return max(section_best_matches, key=lambda x: x[3])
+    
+        return None, None, None, -1
 
     @classmethod
     def process_single_item(cls, item_data: Dict[str, Any]) -> Dict[str, Any]:
@@ -143,7 +154,7 @@ class PromoProcessor(ABC):
         if not hasattr(cls, "logger"):
             cls.logger = logging.getLogger(cls.__name__)
         upc = updated_item.get("upc", "")
-        
+        updated_item["remarks"] = ""
         # Process deals
         deals_desc = updated_item.get("volume_deals_description", "")
         if deals_desc:
@@ -154,7 +165,7 @@ class PromoProcessor(ABC):
                 filt = lambda x: x.get("sale_price") == x.get("unit_price")
                 if updated_item and filt(updated_item):
                     updated_item["volume_deals_price"] = ""
-                    
+                    updated_item["remarks"] = "Volume deals has been applied to this item as sale price."
         if not updated_item: return {}
         # Process coupons
         coupon_desc = updated_item.get("digital_coupon_description", "")
@@ -182,15 +193,6 @@ class PromoProcessor(ABC):
         return score
 
     @classmethod
-    def set_processor_precedence(cls) -> None:
-        for processor_class in cls.subclasses:
-            processor_class.PRECEDENCE = max(
-                (cls.calculate_pattern_precedence(pattern) for pattern in processor_class.patterns),
-                default=0
-            )
-
-    @classmethod
-    @lru_cache(maxsize=1024)
     def matcher(cls, description: str) -> str:
         pattern, match, processor, score = cls.find_best_match(description)
         return pattern

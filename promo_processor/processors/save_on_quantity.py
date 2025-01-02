@@ -5,7 +5,10 @@ class SaveOnQuantityProcessor(PromoProcessor):
     patterns = [
         r"\$(?P<total_price>\d+(?:\.\d+)?)\s+SAVE\s+\$(?P<discount>\d+(?:\.\d+)?)\s+on\s+(?P<quantity>\w+)\s+\(\d+\)",
         r"(?i)SAVE\s+\$(?P<discount>\d+(?:\.\d+)?)\s+on\s+(?P<quantity>\d+)\s+(?P<product>[\w\s-]+)",
-        r"\$(?P<discount>\d+(?:\.\d+)?)\s+OFF\s+When\s+Buy\s+(?P<quantity>\d+)(?:\s+Limit\s+(?P<limit>\d+))?"
+        r"\$(?P<discount>\d+(?:\.\d+)?)\s+OFF\s+When\s+Buy\s+(?P<quantity>\d+)(?:\s+Limit\s+(?P<limit>\d+))?",
+        r"Save\s+\$(?P<discount>\d+(?:\.\d+)?)\s+on\s+(?P<quantity>\d+)",
+        r"Save\s+\$(?P<discount>\d+(?:\.\d+)?)\s+when\s+you\s+buy\s+(?P<quantity>\d+)",
+        r"Buy\s+(?P<quantity>\d+),\s+Save\s+\$(?P<discount>\d+(?:\.\d+)?)",
     ]
 
     def calculate_deal(self, item, match):
@@ -14,14 +17,14 @@ class SaveOnQuantityProcessor(PromoProcessor):
         try:
             total_price = float(match.group('total_price'))
         except IndexError:
-            total_price = item_data.get("sale_price", item_data.get("regular_price", 0))
+            total_price = float(item_data.get("sale_price") or item_data.get("regular_price", 0))
             
         discount = float(match.group('discount'))
         quantity = float(match.group('quantity'))        
         
-        volume_deals_price = total_price - discount
+        volume_deals_price = (total_price * quantity) - discount
         
-        item_data["volume_deals_price"] = round(volume_deals_price, 2)
+        item_data["volume_deals_price"] = round(discount, 2)
         item_data["unit_price"] = round(volume_deals_price / quantity, 2)
         item_data["digital_coupon_price"] = 0
         return item_data
@@ -29,16 +32,16 @@ class SaveOnQuantityProcessor(PromoProcessor):
     def calculate_coupon(self, item, match):
         """Calculate the price after applying a coupon discount for Save $X on Y promotions."""
         item_data = item.copy()
-        unit_price = item_data.get("unit_price") or item_data.get("sale_price") or item_data.get("regular_price", 0) if item.get("many") else item_data.get("sale_price") or item_data.get("regular_price", 0)
+        unit_price = item_data.get('unit_price') or item_data.get("sale_price") or item_data.get("regular_price", 0) if item.get("many") else item_data.get("sale_price") or item_data.get("regular_price", 0)
         if isinstance(unit_price, str) and not unit_price:
             unit_price = 0
-        price = float(unit_price)
+        
         quantity = float(match.group('quantity'))
         discount = float(match.group('discount'))
         
-        unit_price = ((price * quantity) - discount) / quantity
+        total_price = (unit_price * quantity) - discount
+        unit_price = total_price / quantity if quantity > 0 else 0
         
         item_data["unit_price"] = round(unit_price, 2)
         item_data["digital_coupon_price"] = round(discount, 2)
         return item_data
-        

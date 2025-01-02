@@ -4,7 +4,9 @@ class SpendSavingsProcessor(PromoProcessor):
     patterns = [
         r'Spend\s+\$(?P<spend>\d+(?:\.\d{2})?)\s+Save\s+\$(?P<savings>\d+(?:\.\d{2})?)\s+on\s+.*?',
         r'\$(?P<savings>\d+(?:\.\d{2})?)\s+off\s+When\s+you\s+spend\s+\$(?P<spend>\d+(?:\.\d{2})?)\s+on\s+.*?',
-        r'\$(?P<savings>\d+(?:\.\d{2})?)\s+off\s+When\s+you\s+spend\s+\$(?P<spend>\d+)'
+        r'\$(?P<savings>\d+(?:\.\d{2})?)\s+off\s+When\s+you\s+spend\s+\$(?P<spend>\d+)',
+        r'Save\s+\$(?P<savings>\d+(?:\.\d{2})?)\s+When\s+You\s+Spend\s+\$(?P<spend>\d+(?:\.\d{2})?)',
+        
     ]    
 
     
@@ -35,5 +37,5 @@ class SpendSavingsProcessor(PromoProcessor):
         unit_price = price - (price * discount_rate)
     
         item_data["unit_price"] = round(unit_price, 2)
-        item_data["digital_coupon_price"] = round((price * discount_rate), 2)
+        item_data["digital_coupon_price"] = round((savings_value), 2)
         return item_data
