@@ -1,6 +1,6 @@
 from promo_processor.processor import PromoProcessor
 
-class AboutEachPriceProcessor(PromoProcessor):
+class AboutEachPriceProcessor(PromoProcessor, version=1):
     patterns = [r"\$(?P<unit_price>\d+(?:\.\d+)?)\s+Each"]
     
     
@@ -29,4 +29,37 @@ class AboutEachPriceProcessor(PromoProcessor):
         item_data['digital_coupon_price'] = round(unit_price_calculated, 2)
         item_data["unit_price"] = round(unit_price_calculated, 2)
         
+        return item_data
+
+class SaveEachWhenBuyMoreProcessor(PromoProcessor, version=2):
+    patterns = [r"Save\s+\$(?P<discount>\d+(?:\.\d+)?)\s+each\s+when\s+you\s+buy\s+(?P<min_quantity>\d+)\s+or\s+more"]
+    # Save $1 each when you buy 5 or more
+    def calculate_deal(self, item, match):
+        item_data = item.copy()
+        discount = float(match.group('discount'))
+        min_quantity = int(match.group('min_quantity'))
+        quantity = item_data.get("quantity", 1)
+        original_price = item_data.get('unit_price') or item_data.get("sale_price") or item_data.get("regular_price", 0) if item.get("many") else item_data.get("sale_price") or item_data.get("regular_price", 0)
+
+        volume_deals_price = discount * min_quantity
+        unit_price = ((original_price * min_quantity) - volume_deals_price) / min_quantity
+        item_data['volume_deals_price'] = round(volume_deals_price, 2)
+        item_data['unit_price'] = round(unit_price, 2)
+        
+        
+        item_data['digital_coupon_price'] = 0
+        return item_data
+
+    def calculate_coupon(self, item, match):
+        item_data = item.copy()
+        discount = float(match.group('discount'))
+        min_quantity = int(match.group('min_quantity'))
+        quantity = item_data.get("quantity", 1)
+        original_price = item_data.get("unit_price", 0)
+
+        if quantity >= min_quantity:
+            discounted_price = original_price - discount
+            item_data['digital_coupon_price'] = round(discounted_price, 2)
+            item_data["unit_price"] = round(discounted_price, 2)
+            
         return item_data
