@@ -26,7 +26,15 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(level
 
 # Create logs directory if it doesn't exist in parent directory
 logs_dir = Path(__file__).resolve().parent.parent / "logs"
-logs_dir.mkdir(parents=True, exist_ok=True)
+if logs_dir.exists():
+    # Remove all files in the logs directory
+        for file in logs_dir.glob('*'):
+            try:
+                file.unlink()
+            except Exception as e:
+                logging.error(f"Failed to remove file {file}: {str(e)}")
+else:
+    logs_dir.mkdir(parents=True, exist_ok=True)
 
 # Set up rotating file handler for logging with size limit and backup count
 handler = RotatingFileHandler(logs_dir / 'app.log', maxBytes=9000000, backupCount=10)

@@ -122,12 +122,13 @@ class PercentOffProcessor(PromoProcessor, version=3):
     
 class PayPalRebateProcessor(PromoProcessor, version=4):
     patterns = [
-        r"\$(?P<rebate>\d+\.\d{2})\s+REBATE\s+via\s+PayPal\s+when\s+you\s+buy\s+(?P<quantity>ONE|TWO|THREE|FOUR|FIVE|SIX|SEVEN|EIGHT|NINE|TEN)\s*(?:\(\d+\))?",    ]    
+        r"\$(?P<rebate>\d+\.\d{2})\s+REBATE\s+via\s+PayPal\s+when\s+you\s+buy\s+(?P<quantity>ONE|TWO|THREE|FOUR|FIVE|SIX|SEVEN|EIGHT|NINE|TEN)\s*(?:\(\d+\))?",
+        r"Rebate:\s+\$(?P<rebate>\d+)\s+back\s+when\s+you\s+buy\s+(?P<quantity>\d+)"    ]    
     
     def calculate_deal(self, item, match):
         item_data = item.copy()
         rebate_amount = float(match.group('rebate'))
-        quantity = self.NUMBER_MAPPING[match.group('quantity').upper()]
+        quantity = self.NUMBER_MAPPING[match.group('quantity').upper()] if match.group('quantity').isalpha() else float(match.group('quantity'))
         price = item_data.get("sale_price") or item_data.get('regular_price', 0)
         price = float(price) if price else 0
         
@@ -144,7 +145,7 @@ class PayPalRebateProcessor(PromoProcessor, version=4):
     def calculate_coupon(self, item, match):
         item_data = item.copy()
         rebate_amount = float(match.group('rebate'))
-        quantity = self.NUMBER_MAPPING[match.group('quantity').upper()]
+        quantity = self.NUMBER_MAPPING[match.group('quantity').upper()] if match.group('quantity').isalpha() else float(match.group('quantity'))
         base_price = item_data.get('unit_price') or item_data.get("sale_price") or item_data.get("regular_price", 0) if item.get("many") else item_data.get("sale_price") or item_data.get("regular_price", 0)
         base_price = float(base_price) if base_price else 0
         
@@ -154,4 +155,66 @@ class PayPalRebateProcessor(PromoProcessor, version=4):
         item_data["digital_coupon_price"] = round(rebate_amount / quantity, 2)
         item_data["rebate_amount"] = rebate_amount
         item_data["rebate_type"] = "PayPal"
+        return item_data
+
+class WinePackProcessor(PromoProcessor, version=5):
+    patterns = [
+        r'^Wine\s+(?P<percent>\d+)%\s+(?P<quantity>\d+)\s+Pack\s+\$(?P<price>\d+\.\d{2})\s+Save\s+Up\s+To:\s+\$(?P<savings>\d+\.\d{1})'
+    ]
+    
+    def calculate_deal(self, item, match):
+        item_data = item.copy()
+        percent = float(match.group('percent'))
+        quantity = float(match.group('quantity'))
+        pack_price = float(match.group('price'))
+        savings = float(match.group('savings'))
+        
+        unit_price = pack_price / quantity
+        volume_deals_price = pack_price
+            
+        item_data["volume_deals_price"] = round(volume_deals_price, 2)
+        item_data["unit_price"] = round(unit_price, 2)
+        item_data["digital_coupon_price"] = 0
+        return item_data
+
+    def calculate_coupon(self, item, match):
+        item_data = item.copy()
+        percent = float(match.group('percent'))
+        quantity = float(match.group('quantity'))
+        pack_price = float(match.group('price'))
+        savings = float(match.group('savings'))
+        
+        unit_price = pack_price / quantity
+        
+        item_data["unit_price"] = round(unit_price, 2)
+        item_data["digital_coupon_price"] = round(pack_price, 2)
+        return item_data
+
+class HealthyAislesProcessor(PromoProcessor, version=6):
+    patterns = [
+        r'^Healthy\s+Aisles\s+\$(?P<price>\d+\.\d{2})\s+Save\s+Up\s+To:\s+\$(?P<savings>\d+\.\d{1})'
+    ]
+    
+    def calculate_deal(self, item, match):
+        item_data = item.copy()
+        price = float(match.group('price'))
+        savings = float(match.group('savings'))
+        
+        volume_deals_price = price
+        unit_price = price
+            
+        item_data["volume_deals_price"] = round(volume_deals_price, 2)
+        item_data["unit_price"] = round(unit_price, 2)
+        item_data["digital_coupon_price"] = 0
+        return item_data
+
+    def calculate_coupon(self, item, match):
+        item_data = item.copy()
+        price = float(match.group('price'))
+        savings = float(match.group('savings'))
+        
+        unit_price = price
+        
+        item_data["unit_price"] = round(unit_price, 2)
+        item_data["digital_coupon_price"] = round(savings, 2)
         return item_data

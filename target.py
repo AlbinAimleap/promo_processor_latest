@@ -1,4 +1,5 @@
 import re
+import pandas as pd
 
 class Target:
     def __init__(self, processor, df):
@@ -9,6 +10,7 @@ class Target:
         self.processor.apply(self.skip_invalids)
         self.processor.apply(self.get_lowest_unit_price)
         self.processor.apply(self.format_zeros)
+        self.processor.apply(self.format_date)
         
 
     def remove_invalid_promos(self, data):
@@ -82,7 +84,11 @@ class Target:
                 if item[key] == 0:
                     item[key] = ""
         return data
-
+    
+    def format_date(self, data):
+        df = pd.DataFrame(data)
+        df['crawl_date'] = df['crawl_date'].astype(str)
+        return df.to_dict(orient='records')
    
     def get_lowest_unit_price(self, data):
         if not data:

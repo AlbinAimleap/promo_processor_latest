@@ -143,7 +143,6 @@ def process_product(item):
 def main():
     parser = argparse.ArgumentParser(description='Process store product data')
     parser.add_argument('input_file', help='Input JSON file path')
-    parser.add_argument('output_file', help='Output JSON file path')
     args = parser.parse_args()
 
     try:
@@ -152,7 +151,7 @@ def main():
 
         validated_products = [process_product(item) for item in data]
 
-        with open(args.output_file, 'w') as f:
+        with open(args.input_file.replace(".json", "_validated.json"), 'w') as f:
             json.dump(format_zeros(validated_products), f, indent=2)
 
     except Exception as e:

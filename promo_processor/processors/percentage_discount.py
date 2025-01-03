@@ -5,6 +5,7 @@ class PercentageOffProcessor(PromoProcessor, version=1):
         r"^(?P<discount>\d+)%\s+off",
         r"^Deal:\s+(?P<discount>\d+)%\s+off",
         r"^Save\s+(?P<discount>\d+)%$",
+        r"^Save\s+(?P<discount>\d+)%\s+on",
     ]    
     
     def calculate_deal(self, item, match):
@@ -110,4 +111,3 @@ class PercentageOffQuantityProcessor(PromoProcessor, version=3):
         item_data["unit_price"] = round(discounted_price, 2)
         item_data["digital_coupon_price"] = round(discounted_price, 2)
         return item_data
-

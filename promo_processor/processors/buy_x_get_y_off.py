@@ -16,7 +16,7 @@ class BuyGetDiscountProcessor(PromoProcessor):
         item_data = item.copy()
         price = item_data.get("sale_price") or item_data.get("regular_price", 0)
         
-        if match.group('buy') and match.group('get'):
+        if "buy" in match.groupdict() and "get" in match.groupdict():
             buy_quantity = int(match.group('buy'))
             get_quantity = int(match.group('get'))
             discount_percentage = int(match.group('discount'))
