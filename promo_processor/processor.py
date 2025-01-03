@@ -29,7 +29,7 @@ logs_dir = Path(__file__).resolve().parent.parent / "logs"
 logs_dir.mkdir(parents=True, exist_ok=True)
 
 # Set up rotating file handler for logging with size limit and backup count
-handler = RotatingFileHandler(logs_dir / 'app.log', maxBytes=1000000, backupCount=10)
+handler = RotatingFileHandler(logs_dir / 'app.log', maxBytes=9000000, backupCount=10)
 handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
 logging.getLogger().addHandler(handler)
 
