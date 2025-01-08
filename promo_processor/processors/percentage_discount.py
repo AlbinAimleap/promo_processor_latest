@@ -111,3 +111,37 @@ class PercentageOffQuantityProcessor(PromoProcessor, version=3):
         item_data["unit_price"] = round(discounted_price, 2)
         item_data["digital_coupon_price"] = round(discounted_price, 2)
         return item_data
+
+
+class PercentageOffSelectProcessor(PromoProcessor, version=4):
+    patterns = [
+        r"^Save\s+(?P<discount>\d+)%\s+select",
+    ]
+    
+    def calculate_deal(self, item, match):
+        item_data = item.copy()
+        discount_percentage = float(match.group('discount'))
+        discount_decimal = discount_percentage / 100
+        price = item_data.get("sale_price") or item_data.get('regular_price', 0)
+        price = float(price) if price else 0
+        
+        discounted_price = price * (1 - discount_decimal)
+        
+        item_data["volume_deals_price"] = round(discounted_price, 2)
+        item_data["unit_price"] = round(discounted_price, 2)
+        item_data["digital_coupon_price"] = 0
+        return item_data
+        
+    def calculate_coupon(self, item, match):
+        item_data = item.copy()
+        discount_percentage = float(match.group('discount'))
+        discount_decimal = discount_percentage / 100
+        base_price = item_data.get('unit_price') or item_data.get("sale_price") or item_data.get("regular_price", 0) if item.get("many") else item_data.get("sale_price") or item_data.get("regular_price", 0)
+        base_price = float(base_price) if base_price else 0
+        
+        discounted_price = base_price * (1 - discount_decimal)
+        
+        item_data["unit_price"] = round(discounted_price, 2)
+        item_data["digital_coupon_price"] = round(discounted_price, 2)
+        return item_data
+

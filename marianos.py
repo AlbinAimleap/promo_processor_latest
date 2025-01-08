@@ -1,4 +1,5 @@
 import re
+from alive_progress import alive_it
 
 class Marianos:
     def __init__(self, processor, df):
@@ -33,7 +34,7 @@ class Marianos:
 
     def split_promos(self, data):
         new_data = []
-        for item in data:
+        for item in alive_it(data):
             if not item["digital_coupon_description"]:
                 new_data.append(item.copy())
                 continue
@@ -54,7 +55,7 @@ class Marianos:
             upc = item.get("upc")
             unit_price = float(item.get("unit_price", 0) or 0)
             
-            if upc not in upc_dict or unit_price < float(upc_dict[upc].get("unit_price", 0) or 0):
+            if upc not in upc_dict or (unit_price < float(upc_dict[upc].get("unit_price", 0) or 0) and unit_price > 0):
                 upc_dict[upc] = item.copy()
             
             if item.get("many"):
