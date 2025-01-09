@@ -13,7 +13,7 @@ class TargetCirclePriceProcessor(PromoProcessor):
 
     def calculate_coupon(self, item, match) -> dict:
         """Calculate coupon price for fixed price deals and amount off deals"""
-        item_data = item.copy()
+        item_data = item.copy() 
         if 'price' in match.groupdict():
             price = float(match.group('price'))
             item_data["digital_coupon_price"] = price
@@ -23,7 +23,7 @@ class TargetCirclePriceProcessor(PromoProcessor):
             amount_off = float(match.group('amount'))
             original_price = item_data.get('unit_price') or item_data.get('sale_price') or item_data.get('regular_price', 0) if item.get("many") else item_data.get("sale_price") or item_data.get("regular_price", 0)
             new_price = max(0, original_price - amount_off)
-            item_data["digital_coupon_price"] = round(amount_off)
+            item_data["digital_coupon_price"] = amount_off
             item_data["unit_price"] = round(new_price)
             
         return item_data

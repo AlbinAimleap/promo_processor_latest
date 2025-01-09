@@ -6,8 +6,9 @@ class DollarOffProcessor(PromoProcessor, version=1):
         r'^Save\s+\$(?P<savings>\d+(?:\.\d{2})?)',  # Matches "Save $3.00" or "Save $3"
         r'^\$(?P<savings>\d+\.\d{2})\s+off\s+(?P<size>\d+\.?\d*-\d+\.?\d*-[a-zA-Z]+\.?)',  # Matches "$0.50 off  15.4-21-oz."
         r'^\$(?P<savings>\d+\.\d{2})\s+off\s+(?P<size>\d+\.?\d*-[a-zA-Z]+\.?)',  # Matches "$0.25 off 15.25-oz."
-    ]
-    
+        r'^\$(?P<savings>\d+)\s+Target\s+GiftCard\s+on\s+Crest\s+teeth-whitening\s+strips',  # Matches "$5 Target GiftCard on Crest teeth-whitening strips"
+        r'^\$(?P<savings>\d+)\s+Target\s+GiftCard\s+with\s+purchase',  # Matches "$20 Target GiftCard with purchase"
+    ]    
     def calculate_deal(self, item, match):
         item_data = item.copy()
         price = item_data.get('sale_price') or item_data.get('regular_price')

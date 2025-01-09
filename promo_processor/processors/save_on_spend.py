@@ -70,18 +70,19 @@ class OffWhenSpendProcessor(PromoProcessor, version=2):
         return item_data
 
 class SaveWhenSpendProcessor(PromoProcessor, version=3):
+    
     patterns = [
         r'Save\s+\$(?P<savings>\d+(?:\.\d{2})?)\s+When\s+You\s+Spend\s+\$(?P<spend>\d+(?:\.\d{2})?)',
         r'Get\s+(?P<percent>\d+)%\s+off\s+When\s+you\s+spend\s+\$(?P<spend>\d+(?:\.\d{2})?)',
+        r'\$(?P<savings>\d+)\s+Target\s+GiftCard\s+with\s+select\s+\$(?P<spend>\d+(?:\.\d{2})?)\s+skin\s+care\s+purchase',
     ]
-
     def calculate_deal(self, item, match):
         """Calculate the volume deals price for a deal."""
         item_data = item.copy()
         spend_requirement = float(match.group('spend'))
         price = item_data.get('sale_price') or item_data.get('regular_price', 0)
         
-        if match.group('percent'):
+        if "percent" in match.groupdict():
             percent = float(match.group('percent'))
             discount_rate = percent / 100
         else:
@@ -101,7 +102,7 @@ class SaveWhenSpendProcessor(PromoProcessor, version=3):
         spend_requirement = float(match.group('spend'))
         price = item_data.get('unit_price') or item_data.get('sale_price') or item_data.get('regular_price', 0) if item.get("many") else item_data.get("sale_price") or item_data.get("regular_price", 0)
         
-        if match.group('percent'):
+        if "percent" in match.groupdict():
             percent = float(match.group('percent'))
             discount_rate = percent / 100
             savings_value = price * discount_rate
