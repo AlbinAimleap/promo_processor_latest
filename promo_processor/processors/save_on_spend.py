@@ -75,6 +75,7 @@ class SaveWhenSpendProcessor(PromoProcessor, version=3):
         r'Save\s+\$(?P<savings>\d+(?:\.\d{2})?)\s+When\s+You\s+Spend\s+\$(?P<spend>\d+(?:\.\d{2})?)',
         r'Get\s+(?P<percent>\d+)%\s+off\s+When\s+you\s+spend\s+\$(?P<spend>\d+(?:\.\d{2})?)',
         r'\$(?P<savings>\d+)\s+Target\s+GiftCard\s+with\s+select\s+\$(?P<spend>\d+(?:\.\d{2})?)\s+skin\s+care\s+purchase',
+        r'\$(?P<savings>\d+)\s+(?P<store>[\w\s]+)\s+GiftCard\s+with\s+\$(?P<spend>\d+)(?:\s+[\w\s&]+\s+purchase)?'
     ]
     def calculate_deal(self, item, match):
         """Calculate the volume deals price for a deal."""
@@ -91,7 +92,7 @@ class SaveWhenSpendProcessor(PromoProcessor, version=3):
             
         unit_price = price - (price * discount_rate)
     
-        item_data["volume_deals_price"] = round(unit_price, 2)
+        item_data["volume_deals_price"] = round(spend_requirement, 2)
         item_data["unit_price"] = round(unit_price / 1, 2)
         item_data["digital_coupon_price"] = 0
         return item_data
@@ -113,5 +114,5 @@ class SaveWhenSpendProcessor(PromoProcessor, version=3):
         unit_price = price - (price * discount_rate)
     
         item_data["unit_price"] = round(unit_price, 2)
-        item_data["digital_coupon_price"] = round((savings_value), 2)
+        item_data["digital_coupon_price"] = round((spend_requirement), 2)
         return item_data

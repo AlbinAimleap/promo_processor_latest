@@ -81,10 +81,8 @@ class SimpleGiftCardProcessor(PromoProcessor, version=3):
     """Processor for handling simple gift card promotions."""
 
     patterns = [
-        r'\$(?P<amount>\d+)\s+(?P<store>[\w\s]+)\s+GiftCard\s+with\s+\$(?P<purchase>\d+)(?:\s+[\w\s&]+\s+purchase)?',
         r'\$(?P<amount>\d+)\s+(?P<store>[\w\s]+)\s+GiftCard\s+with\s+(?P<purchase>\d+)\s+(?P<item>[\w\s]+)'
     ]
-
     def calculate_deal(self, item, match):
         """Process simple gift card promotions for deals."""
         item_data = item.copy()

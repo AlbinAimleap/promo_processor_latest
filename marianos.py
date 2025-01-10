@@ -1,5 +1,4 @@
 import re
-from alive_progress import alive_it
 
 class Marianos:
     def __init__(self, processor, df):
