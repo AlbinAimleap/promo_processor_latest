@@ -53,6 +53,7 @@ class PromoProcessor(ABC):
     subclasses = {}  # Registry for processor subclasses
     results = []     # Storage for processing results
     _lock = threading.Lock()  # Thread lock for synchronization
+    site_patterns = {}
     
     # Dictionary mapping number words to their integer values
     NUMBER_MAPPING = {"ONE": 1, "TWO": 2, "THREE": 3, "FOUR": 4, "FIVE": 5, 
@@ -82,6 +83,7 @@ class PromoProcessor(ABC):
         """Initialize the processor instance with class-specific logging."""
         super().__init__()
         self.logger = logging.getLogger(self.__class__.__name__)
+        
 
     @classmethod
     def apply(cls, func: Callable[[List[Dict[str, Any]]], List[Dict[str, Any]]]) -> T:
@@ -279,6 +281,14 @@ class PromoProcessor(ABC):
             # Find matching pattern and processor for the deals description
             pattern, match, processor, score = cls.find_best_match(deals_desc)
             if processor and match:
+                cls.site_patterns.update(
+                    {f'{item_data["upc"]}.deal': {
+                        "pattern": pattern, 
+                        "processor": f"{processor.__module__}.{processor.__class__.__name__}", 
+                        "score": score, 
+                        "promo": updated_item["volume_deals_description"]
+                        }})
+                    
                 # Log successful match for volume deals
                 cls.logger.info(f"UPC: {upc}: DEALS: {processor.__class__.__name__}: {deals_desc}")
                 # Process the deal using matched processor
@@ -298,6 +308,13 @@ class PromoProcessor(ABC):
             # Find matching pattern and processor for the coupon description
             pattern, match, processor, score = cls.find_best_match(coupon_desc)
             if processor and match:
+                cls.site_patterns.update(
+                    {f'{item_data["upc"]}.coupon': {
+                        "pattern": pattern, 
+                        "processor": f"{processor.__module__}.{processor.__class__.__name__}", 
+                        "score": score, 
+                        "promo": updated_item["digital_coupon_description"]
+                        }})
                 # Log successful match for digital coupons
                 cls.logger.info(f"UPC: {upc}: COUPONS: {processor.__class__.__name__}: {coupon_desc}")
                 # Process the coupon using matched processor

@@ -1,4 +1,5 @@
 from argparse import ArgumentParser
+import json
 from promo_processor import PromoProcessor
 from pathlib import Path
 import pandas as pd
@@ -12,6 +13,7 @@ class Processor:
     def __init__(self):
         self.args = self.parser()
         self.data = self.format_data(self.load_file())
+        self.site = self.args.site
     
     def parser(self):
         parser = ArgumentParser()
@@ -51,6 +53,15 @@ class Processor:
         output_dir = Path(self.args.output)
         output_dir.mkdir(parents=True, exist_ok=True)
         processed_data = self.load_site()
+        debug_dir = Path(__file__).parent / "debug"
+        
+        if not debug_dir.exists():
+            debug_dir.mkdir(parents=True, exist_ok=True)
+            
+        with open(debug_dir / "patterns.json", "w") as f:
+            patterns = processed_data.processor.site_patterns
+            json.dump({self.site: patterns}, f, indent=4)
+        
         if self.args.test:
             processed_data.processor.to_json(Path(output_dir) / f"{processed_data.__class__.__name__}_{datetime.now().date()}_test.json")
         else:
