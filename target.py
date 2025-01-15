@@ -5,6 +5,8 @@ class Target:
     def __init__(self, processor, df):
         self.processor = processor
         self.processor.pre_process(self.split_promos)
+        self.processor.pre_process(self.sort_promos)
+        self.processor.pre_process(self.split_promos)
         self.processor.process_item(df)
         self.processor.apply(self.reorder_item)
         self.processor.apply(self.skip_invalids)
@@ -12,7 +14,38 @@ class Target:
         self.processor.apply(self.format_zeros)
         self.processor.apply(self.format_date)
         
-
+    
+    def sort_promos(self, data):
+        patterns = [
+            r'(\d+)\s*for\s*\$(\d+\.?\d*)',                     # 2 for $5, 3 for $10
+            r'(\d+)\s*@\s*\$(\d+\.?\d*)',                       # 2 @ $5, 3 @ $10
+            r'(\d+)\s*\/\s*\$(\d+\.?\d*)',                      # 2/$5, 3/$10
+            r'Buy\s*(\d+)\s*Get\s*(\d+)\s*Free',                # Buy 1 Get 1 Free, Buy 2 Get 1 Free
+            r'Buy\s*(\d+)\s*Get\s*(\d+)\s*at\s*(\d+)%\s*off',   # Buy 1 Get 1 50% off, Buy 2 Get 1 25% off
+            r'Buy\s*(\d+)\s*Save\s*\$(\d+\.?\d*)',              # Buy 2 Save $5, Buy 3 Save $10
+            r'Mix\s*&\s*Match\s*(\d+)\s*for\s*\$(\d+\.?\d*)',   # Mix & Match 2 for $5, Mix & Match 3 for $10
+            r'Save\s*\$(\d+\.?\d*)\s*when\s*you\s*buy\s',       # Save $5 when you buy, Save $10 when you buy
+            ]      
+        
+        for item in data:
+           
+            if not any(re.search(pattern, item["volume_deals_description"]) for pattern in patterns):
+                if not item["digital_coupon_description"]:
+                    item["digital_coupon_description"] = item["volume_deals_description"]
+                else:
+                    item["digital_coupon_description"] = item["digital_coupon_description"] + "||" + item["volume_deals_description"]
+                item["volume_deals_description"] = ""
+            
+            if any(re.search(pattern, item["digital_coupon_description"]) for pattern in patterns):
+                if not item["volume_deals_description"]:
+                    item["volume_deals_description"] = item["digital_coupon_description"]
+                else:
+                    item["volume_deals_description"] = item["volume_deals_description"] + "||" + item["digital_coupon_description"]
+                item["digital_coupon_description"] = ""
+        
+        return data
+            
+    
     def remove_invalid_promos(self, data):
         for item in data:
             description = item["description"]
