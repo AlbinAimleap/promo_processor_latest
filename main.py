@@ -58,7 +58,7 @@ class Processor:
         if not debug_dir.exists():
             debug_dir.mkdir(parents=True, exist_ok=True)
             
-        with open(debug_dir / "patterns.json", "w") as f:
+        with open(debug_dir / f"patterns_{datetime.now().date()}.json", "w") as f:
             patterns = processed_data.processor.site_patterns
             json.dump({self.site: patterns}, f, indent=4)
         
