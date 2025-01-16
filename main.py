@@ -1,5 +1,6 @@
 from argparse import ArgumentParser
 import json
+from typing import List, Dict, Any
 from promo_processor import PromoProcessor
 from pathlib import Path
 import pandas as pd
@@ -44,7 +45,7 @@ class Processor:
             return Target(PromoProcessor, self.data)
         raise ValueError("Invalid site")
     
-    def format_data(self, data):
+    def format_data(self, data: pd.DataFrame) -> List[Dict[str, Any]]:
         data['upc'] = data['upc'].astype(str).str.zfill(13)
         data.fillna(value="", inplace=True)
         return data.to_dict(orient='records')
