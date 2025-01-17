@@ -28,7 +28,8 @@ initial = load_file(args.inputfile)
 
 unprocessed_promos = []
 
-exclude = [r"Earn \d+X Points*", r"Free with Purchase", r"\d+X Fuel Points", r"Free makeup bag", r"Save with multiple"]
+exclude = [r"Earn \d+X Points*", r"Free with Purchase", r"\d+X Fuel Points",r"FREE Conversation Hearts Buy ONE",r"FREE Pepsi Drinks Buy",r"\$\d+(.\d+)?\s+for Pepsi & Chips  Buy any ReadyMeals",
+           r"Buy \d+ Candy or Cards Save", r"Free makeup bag", r"Save with multiple"]
 
 for item in initial:
     if any(re.search(exclude_item, item["digital_coupon_description"]) or re.search(exclude_item, item["volume_deals_description"]) for exclude_item in exclude):

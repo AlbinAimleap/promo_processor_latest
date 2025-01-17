@@ -294,7 +294,7 @@ class PromoProcessor(ABC):
                 # Process the deal using matched processor
                 updated_item = processor.calculate_deal(updated_item, match)
                 # Define filter function to check if sale price equals unit price
-                filt = lambda x: x.get("sale_price") == x.get("unit_price")
+                filt = lambda x: (x.get("sale_price") == x.get("unit_price")) or (x.get("sale_price") == x.get("volume_deals_price"))
                 # If sale price equals unit price, clear volume deals price
                 if updated_item and filt(updated_item):
                     updated_item["volume_deals_price"] = ""

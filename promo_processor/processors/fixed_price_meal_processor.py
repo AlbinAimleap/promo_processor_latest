@@ -38,8 +38,10 @@ class BasicFixedPriceProcessor(PromoProcessor, version=5):
         return item_data
 
 class LimitedFixedPriceProcessor(PromoProcessor, version=2):
+    
     patterns = [
         r'^\$(?P<price>\d+\.?\d*)\s+When\s+Buy\s+(?P<quantity>\d+)\s+Limit\s+(?P<limit>\d+)',
+        r'^\$(?P<price>\d+\.?\d*)\s+When\s+you\s+Buy\s+(?P<quantity>\d+)\s+or\s+more',#$3.49 WHEN YOU BUY 5 OR MORE
     ]
     
     def calculate_deal(self, item: Dict[str, Any], match: re.Match) -> Dict[str, Any]:
@@ -49,10 +51,7 @@ class LimitedFixedPriceProcessor(PromoProcessor, version=2):
         
         item_data["volume_deals_price"] = round(price, 2)
         item_data["unit_price"] = round(price / quantity, 2)
-        item_data["digital_coupon_price"] = 0 
-        item_data["required_quantity"] = quantity
-        item_data["limit"] = int(match.group('limit'))
-        
+        item_data["digital_coupon_price"] = 0        
         return item_data
     
     def calculate_coupon(self, item: Dict[str, Any], match: re.Match) -> Dict[str, Any]:
@@ -62,9 +61,6 @@ class LimitedFixedPriceProcessor(PromoProcessor, version=2):
         
         item_data["digital_coupon_price"] = round(price, 2)
         item_data["unit_price"] = round(price / quantity, 2)
-        item_data["required_quantity"] = quantity
-        item_data["limit"] = int(match.group('limit'))
-        
         return item_data
 
 class MultiQuantityFixedPriceProcessor(PromoProcessor, version=3):

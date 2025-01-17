@@ -4,7 +4,9 @@ class AboutEachPriceProcessor(PromoProcessor, version=1):
     patterns = [r"\$(?P<unit_price>\d+(?:\.\d+)?)\s+each.\s+when\s+you\s+buy\s+(?P<quantity>\d+)\s",
                 r"\$(?P<unit_price>\d+(?:\.\d+)?)\s+each.\s+when\s+you\s+buy\s+(?P<quantity>\d+)\s+limit\s+(?P<min_quantity>\d+)",
                 r"\$(?P<unit_price>\d+(?:\.\d+)?)\s+each.\s+limit\s+(?P<quantity>\d+)\s+.*?limit\s+(?P<min_quantity>\d+)",
-                r"\$(?P<unit_price>\d+(?:\.\d+)?)\s+Each"]
+                r"\$(?P<unit_price>\d+(?:\.\d+)?)\s+Each",
+                r"\$(?P<unit_price>\d+(?:\.\d+)?)\s+limit\s+(?P<quantity>\d+)\s+.*?limit\s+(?P<min_quantity>\d+)\s"
+                ]
     
     
     # Example: "$5.99 Each" or "$2.50 Each"

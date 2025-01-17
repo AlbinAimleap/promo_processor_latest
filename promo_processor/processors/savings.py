@@ -1,5 +1,5 @@
 from promo_processor.processor import PromoProcessor
-
+import math
 class DollarOffProcessor(PromoProcessor, version=1):
     patterns = [
         r'^Save\s+\$(?P<savings>\d+\.\d{2})\s+off\s+(?P<quantity>\d+)\s+',  # Matches "Save $3.00 off 10 ..."
@@ -219,4 +219,60 @@ class HealthyAislesProcessor(PromoProcessor, version=6):
         
         item_data["unit_price"] = round(unit_price, 2)
         item_data["digital_coupon_price"] = round(savings, 2)
+        return item_data
+    
+
+    
+class DollarOffOnMoreProcessor(PromoProcessor, version=7):
+    #$1.00 OFF of $1 or more
+    patterns = [
+        r'\$(?P<savings>\d+\.\d{2})\s+off\s+of\s+\$(?P<min_price>\d+)\s+or\s+more',  # Matches "Save $3.00 off 10 ..."
+    ]    
+    def calculate_deal(self, item, match):
+        item_data = item.copy()
+        price = item_data.get('sale_price') or item_data.get('regular_price')
+        savings_value = float(match.group('savings'))
+        min_price = float(match.group('min_price'))
+        if price>min_price:
+            volume_deals_price = price - savings_value
+            unit_price = volume_deals_price
+        elif price == min_price:
+            
+            quantity_needed = math.ceil(min_price/price)+1
+            total_price = quantity_needed * price
+            volume_deals_price = total_price - savings_value
+            unit_price = total_price / quantity_needed
+        else:
+            
+            quantity_needed = math.ceil(min_price/price)
+            total_price = quantity_needed * price
+            volume_deals_price = total_price - savings_value
+            unit_price = total_price / quantity_needed
+        item_data["volume_deals_price"] = round(volume_deals_price, 2)
+        item_data["unit_price"] = round(unit_price, 2)
+        item_data["digital_coupon_price"] = 0
+        return item_data
+
+    def calculate_coupon(self, item, match):
+        item_data = item.copy()
+        price = item_data.get('unit_price') or item_data.get('sale_price') or item_data.get('regular_price', 0) if item.get("many") else item_data.get("sale_price") or item_data.get("regular_price", 0)
+        savings_value = float(match.group('savings'))
+        min_price = float(match.group('min_price'))
+        if price>min_price:
+            volume_deals_price = price - savings_value
+            unit_price = volume_deals_price
+        elif price == min_price:
+            
+            quantity_needed = math.ceil(min_price/price)+1
+            total_price = quantity_needed * price
+            volume_deals_price = total_price - savings_value
+            unit_price = total_price / quantity_needed
+        else:
+            
+            quantity_needed = math.ceil(min_price/price)
+            total_price = quantity_needed * price
+            volume_deals_price = total_price - savings_value
+            unit_price = total_price / quantity_needed  
+        item_data["unit_price"] = round(unit_price, 2)
+        item_data["digital_coupon_price"] = round(volume_deals_price, 2)
         return item_data

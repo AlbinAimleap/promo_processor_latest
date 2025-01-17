@@ -1,6 +1,6 @@
 import re
 
-class Jewelosco:
+class Jewel:
     def __init__(self, processor, df):
         self.processor = processor
         self.processor.pre_process(self.split_promos)

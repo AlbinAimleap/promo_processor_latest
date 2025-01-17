@@ -6,7 +6,7 @@ from pathlib import Path
 import pandas as pd
 from datetime import datetime
 from marianos import Marianos
-from jewelosco import Jewelosco
+from jewelosco import Jewel
 from target import Target
 
 
@@ -38,7 +38,7 @@ class Processor:
     
     def load_site(self):
         if self.args.site == "jewel":
-            return Jewelosco(PromoProcessor, self.data)
+            return Jewel(PromoProcessor, self.data)
         elif self.args.site == "marianos":
             return Marianos(PromoProcessor, self.data)
         elif self.args.site == "target":

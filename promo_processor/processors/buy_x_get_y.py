@@ -1,5 +1,5 @@
 from promo_processor.processor import PromoProcessor
-
+import math
 class BuyGetFreeProcessor(PromoProcessor, version=1):
     patterns = [
         r"Buy\s+(?P<quantity>\d+),?\s+Get\s+(?P<free>\d+)\s+Free"
@@ -83,5 +83,57 @@ class BuyGetDiscountProcessor(PromoProcessor, version=2):
         
         item_data['unit_price'] = round(unit_price, 2)
         item_data['digital_coupon_price'] = round(discount_amount, 2)
+        
+        return item_data
+    
+
+class SpendGetFreeProcessor(PromoProcessor, version=3):
+    #Spend $10 Get 1 Free
+    patterns = [
+        r"Spend\s+\$(?P<price>\d+),?\s+Get\s+(?P<free>\d+)\s+Free"
+    ]
+    
+    def calculate_deal(self, item, match):
+        """Process 'Spend X Get Y Free' specific promotions."""
+        item_data = item.copy()
+        
+        spend = int(match.group('price'))
+        free = int(match.group('free'))
+        price = item_data.get('regular_price', 0)
+        if price>spend:
+            volume_deals_price = price
+            unit_price = price / free
+        else:
+            quantity = 1 / price
+            quantity_needed = math.ceil(spend/price)
+            total_price = quantity_needed * price
+            volume_deals_price = total_price
+            unit_price = price / (quantity_needed+free)
+            
+        item_data['volume_deals_price'] = round(volume_deals_price, 2)
+        item_data['unit_price'] = round(unit_price, 2)
+        item_data['digital_coupon_price'] = 0
+        
+        return item_data
+    
+    def calculate_coupon(self, item, match):
+        """Calculate the price after applying a coupon discount for 'Spend X Get Y Free' promotions."""
+        item_data = item.copy()
+        
+        spend = int(match.group('price'))
+        free = int(match.group('free'))
+        price = item_data.get('regular_price', 0)
+        if price>spend:
+            volume_deals_price = price
+            unit_price = price / free
+        else:
+            quantity = 1 / price
+            quantity_needed = math.ceil(spend/price)
+            total_price = quantity_needed * price
+            volume_deals_price = total_price
+            unit_price = price / (quantity_needed+free)
+            
+        item_data['unit_price'] = round(unit_price, 2)
+        item_data['digital_coupon_price'] = round(volume_deals_price, 2)
         
         return item_data

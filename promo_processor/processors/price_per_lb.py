@@ -4,6 +4,7 @@ class BasicPricePerLbProcessor(PromoProcessor, version=1):
     """Processor for handling basic '$X/lb' promotions."""
     
     patterns = [
+        r'\$(?P<price_per_lb>\d+(?:\.\d{2})?)\s*per\s*lb\.\s*Limit\s*(?P<weight>\d+)\-lbs?\.\s*Limit\s*(?P<weight1>\d+)\-lbs?\.',
         r'\$(?P<price_per_lb>\d+(?:\.\d{2})?)\/lb',
         r'\$(?P<price_per_lb>\d+\.\d{2})\/lb'
     ]
