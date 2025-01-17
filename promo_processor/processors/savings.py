@@ -89,7 +89,8 @@ class CentsOffProcessor(PromoProcessor, version=2):
 
 class PercentOffProcessor(PromoProcessor, version=3):
     patterns = [
-        r'^Save\s+(?P<percent>\d+)%\s+Off'  # Matches "Save 20% Off"
+        r'^Save\s+(?P<percent>\d+)%\s+Off',  # Matches "Save 20% Off"
+        r'^Save\s+(?P<percent>\d+)%\s+in\s+cart'  # Matches "Save 10% in cart on Altitude"
     ]
     
     def calculate_deal(self, item, match):

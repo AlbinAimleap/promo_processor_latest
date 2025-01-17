@@ -25,26 +25,30 @@ class Target:
             r'Buy\s*(\d+)\s*Save\s*\$(\d+\.?\d*)',              # Buy 2 Save $5, Buy 3 Save $10
             r'Mix\s*&\s*Match\s*(\d+)\s*for\s*\$(\d+\.?\d*)',   # Mix & Match 2 for $5, Mix & Match 3 for $10
             r'Save\s*\$(\d+\.?\d*)\s*when\s*you\s*buy\s',       # Save $5 when you buy, Save $10 when you buy
+            r'Buy\s*(\d+),\s*get\s*(\d+)\s*free',               # Buy 3, get 1 free
+            r'Buy\s*(\d+)\s*for\s*\$(\d+\.?\d*)',               # Buy 2 for $3
+            r'Buy\s*(\d+)\s*get\s*(\d+)%\s*off',                # Buy 4 get 10% off
+            r'Buy\s*(\d+),\s*get\s*(\d+)\s*(\d+)%\s*off',       # Buy 1, get 1 50% off
             ]      
         
         for item in data:
-           
-            if not any(re.search(pattern, item["volume_deals_description"]) for pattern in patterns):
-                if not item["digital_coupon_description"]:
-                    item["digital_coupon_description"] = item["volume_deals_description"]
-                else:
-                    item["digital_coupon_description"] = item["digital_coupon_description"] + "||" + item["volume_deals_description"]
-                item["volume_deals_description"] = ""
+            volume_desc = item["volume_deals_description"]
+            digital_desc = item["digital_coupon_description"]
             
-            if any(re.search(pattern, item["digital_coupon_description"]) for pattern in patterns):
-                if not item["volume_deals_description"]:
-                    item["volume_deals_description"] = item["digital_coupon_description"]
-                else:
-                    item["volume_deals_description"] = item["volume_deals_description"] + "||" + item["digital_coupon_description"]
-                item["digital_coupon_description"] = ""
+            if volume_desc:
+                matches_pattern = any(re.search(pattern, volume_desc) for pattern in patterns)
+                if not matches_pattern:
+                    item["digital_coupon_description"] = volume_desc
+                    item["volume_deals_description"] = ""
+            
+            if digital_desc:
+                matches_pattern = any(re.search(pattern, digital_desc) for pattern in patterns)
+                if matches_pattern:
+                    item["volume_deals_description"] = digital_desc
+                    item["digital_coupon_description"] = ""
         
         return data
-            
+             
     
     def remove_invalid_promos(self, data):
         for item in data:
