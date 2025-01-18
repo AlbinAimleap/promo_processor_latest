@@ -1,4 +1,5 @@
 from promo_processor.processor import PromoProcessor
+from promo_processor import base_round
 
 class SelectProductPriceProcessor(PromoProcessor):
     """Processor for handling '$X price on select Product' type promotions."""
@@ -12,8 +13,8 @@ class SelectProductPriceProcessor(PromoProcessor):
         select_price = float(match.group('price'))
         weight = item_data.get('weight', 1)
         
-        item_data["volume_deals_price"] = round(select_price, 2)
-        item_data["unit_price"] = round(select_price / 1, 2)
+        item_data["volume_deals_price"] = base_round(select_price, 2)
+        item_data["unit_price"] = base_round(select_price / 1, 2)
         item_data["digital_coupon_price"] = 0
         
 
@@ -23,8 +24,8 @@ class SelectProductPriceProcessor(PromoProcessor):
         select_price = float(match.group('price'))
         weight = item_data.get('weight', 1)
         
-        item_data["unit_price"] = round(select_price / 1, 2)
-        item_data["digital_coupon_price"] = round(select_price, 2)
+        item_data["unit_price"] = base_round(select_price / 1, 2)
+        item_data["digital_coupon_price"] = base_round(select_price, 2)
         return item_data
         
        

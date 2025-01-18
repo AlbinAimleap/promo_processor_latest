@@ -1,4 +1,5 @@
 from promo_processor.processor import PromoProcessor
+from promo_processor import base_round
 
 class WordBasedQuantityPriceProcessor(PromoProcessor):
     patterns = [
@@ -14,8 +15,8 @@ class WordBasedQuantityPriceProcessor(PromoProcessor):
         quantity = self.NUMBER_MAPPING.get(quantity_word.upper(), 1)
         unit_price = volume_deals_price / quantity
         
-        item_data["volume_deals_price"] = round(volume_deals_price, 2)
-        item_data["unit_price"] = round(unit_price, 2)
+        item_data["volume_deals_price"] = base_round(volume_deals_price, 2)
+        item_data["unit_price"] = base_round(unit_price, 2)
         item_data["digital_coupon_price"] = 0
         return item_data
 
@@ -29,6 +30,6 @@ class WordBasedQuantityPriceProcessor(PromoProcessor):
         quantity = self.NUMBER_MAPPING.get(quantity_word.upper(), 1)
         unit_price = volume_deals_price / quantity
         
-        item_data["digital_coupon_price"] = round(volume_deals_price, 2)
-        item_data["unit_price"] = round(unit_price, 2)
+        item_data["digital_coupon_price"] = base_round(volume_deals_price, 2)
+        item_data["unit_price"] = base_round(unit_price, 2)
         return item_data

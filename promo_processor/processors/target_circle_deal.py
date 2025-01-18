@@ -1,4 +1,5 @@
 from promo_processor.processor import PromoProcessor
+from promo_processor import base_round
 
 class TargetCircleDealProcessor(PromoProcessor):
     patterns = [
@@ -28,6 +29,6 @@ class TargetCircleDealProcessor(PromoProcessor):
     
         unit_price = final_price / (buy_qty + get_qty)
     
-        item_data["digital_coupon_price"] = round(final_price, 2)
-        item_data["unit_price"] = round(unit_price, 2)
+        item_data["digital_coupon_price"] = base_round(final_price, 2)
+        item_data["unit_price"] = base_round(unit_price, 2)
         return item_data

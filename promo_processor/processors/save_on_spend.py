@@ -1,4 +1,5 @@
 from promo_processor.processor import PromoProcessor
+from promo_processor import base_round
 
 class SpendSaveProcessor(PromoProcessor, version=1):
     patterns = [
@@ -15,8 +16,8 @@ class SpendSaveProcessor(PromoProcessor, version=1):
         discount_rate = savings_value / spend_requirement
         unit_price = price - (price * discount_rate)
     
-        item_data["volume_deals_price"] = round(unit_price, 2)
-        item_data["unit_price"] = round(unit_price / 1, 2)
+        item_data["volume_deals_price"] = base_round(unit_price, 2)
+        item_data["unit_price"] = base_round(unit_price / 1, 2)
         item_data["digital_coupon_price"] = 0
         return item_data
 
@@ -30,8 +31,8 @@ class SpendSaveProcessor(PromoProcessor, version=1):
         discount_rate = savings_value / spend_requirement
         unit_price = price - (price * discount_rate)
     
-        item_data["unit_price"] = round(unit_price, 2)
-        item_data["digital_coupon_price"] = round((savings_value), 2)
+        item_data["unit_price"] = base_round(unit_price, 2)
+        item_data["digital_coupon_price"] = base_round((savings_value), 2)
         return item_data
 
 class OffWhenSpendProcessor(PromoProcessor, version=2):
@@ -50,8 +51,8 @@ class OffWhenSpendProcessor(PromoProcessor, version=2):
         discount_rate = savings_value / spend_requirement
         unit_price = price - (price * discount_rate)
     
-        item_data["volume_deals_price"] = round(unit_price, 2)
-        item_data["unit_price"] = round(unit_price / 1, 2)
+        item_data["volume_deals_price"] = base_round(unit_price, 2)
+        item_data["unit_price"] = base_round(unit_price / 1, 2)
         item_data["digital_coupon_price"] = 0
         return item_data
 
@@ -65,8 +66,8 @@ class OffWhenSpendProcessor(PromoProcessor, version=2):
         discount_rate = savings_value / spend_requirement
         unit_price = price - (price * discount_rate)
     
-        item_data["unit_price"] = round(unit_price, 2)
-        item_data["digital_coupon_price"] = round((savings_value), 2)
+        item_data["unit_price"] = base_round(unit_price, 2)
+        item_data["digital_coupon_price"] = base_round((savings_value), 2)
         return item_data
 
 class SaveWhenSpendProcessor(PromoProcessor, version=3):
@@ -92,8 +93,8 @@ class SaveWhenSpendProcessor(PromoProcessor, version=3):
             
         unit_price = price - (price * discount_rate)
     
-        item_data["volume_deals_price"] = round(spend_requirement, 2)
-        item_data["unit_price"] = round(unit_price / 1, 2)
+        item_data["volume_deals_price"] = base_round(spend_requirement, 2)
+        item_data["unit_price"] = base_round(unit_price / 1, 2)
         item_data["digital_coupon_price"] = 0
         return item_data
 
@@ -113,6 +114,6 @@ class SaveWhenSpendProcessor(PromoProcessor, version=3):
             
         unit_price = price - (price * discount_rate)
     
-        item_data["unit_price"] = round(unit_price, 2)
-        item_data["digital_coupon_price"] = round((spend_requirement), 2)
+        item_data["unit_price"] = base_round(unit_price, 2)
+        item_data["digital_coupon_price"] = base_round((spend_requirement), 2)
         return item_data
