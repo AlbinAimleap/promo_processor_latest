@@ -29,8 +29,8 @@ class Target:
             r'Buy\s*(\d+)\s*for\s*\$(\d+\.?\d*)',               # Buy 2 for $3
             r'Buy\s*(\d+)\s*get\s*(\d+)%\s*off',                # Buy 4 get 10% off
             r'Buy\s*(\d+),\s*get\s*(\d+)\s*(\d+)%\s*off',       # Buy 1, get 1 50% off
-            ]      
-        
+            r'Buy\s*1\s*get\s*1\s*25%\s*off',                   # Buy 1 get 1 25% off
+            ]              
         for item in data:
             volume_desc = item["volume_deals_description"]
             digital_desc = item["digital_coupon_description"]

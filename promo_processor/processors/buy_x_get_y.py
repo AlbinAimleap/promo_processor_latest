@@ -56,12 +56,12 @@ class BuyGetDiscountProcessor(PromoProcessor, version=2):
         discount = int(match.group('discount'))
         price = item_data.get('sale_price') or item_data.get('regular_price', 0)
         total_quantity = quantity + free
-        
+        payable = quantity * price
         total_price = price * total_quantity
-        discount_amount = total_price * (1 - discount / 100)
-        unit_price = (total_price - discount_amount) / total_quantity
+        discount_amount = price - (price * (1 - discount / 100))
+        unit_price = price + discount_amount
         
-        item_data['volume_deals_price'] = round(discount_amount, 2)
+        item_data['volume_deals_price'] = round(payable, 2)
         item_data['unit_price'] = round(unit_price, 2)
         item_data['digital_coupon_price'] = 0
         
@@ -76,13 +76,13 @@ class BuyGetDiscountProcessor(PromoProcessor, version=2):
         discount = int(match.group('discount'))
         price = item_data.get('unit_price') or item_data.get("sale_price") or item_data.get("regular_price", 0) if item.get("many") else item_data.get("sale_price") or item_data.get("regular_price", 0)
         total_quantity = quantity + free
-        
+        payable = quantity * price
         total_price = price * total_quantity
-        discount_amount = total_price * (1 - discount / 100)
-        unit_price = (total_price - discount_amount) / total_quantity
+        discount_amount = price - (price * (1 - discount / 100))
+        unit_price = price + discount_amount
         
-        item_data['unit_price'] = round(unit_price, 2)
-        item_data['digital_coupon_price'] = round(discount_amount, 2)
+        item_data['unit_price'] = round(payable, 2)
+        item_data['digital_coupon_price'] = round(unit_price, 2)
         
         return item_data
     
