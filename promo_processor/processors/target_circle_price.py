@@ -1,4 +1,5 @@
 from promo_processor.processor import PromoProcessor
+from promo_processor import base_round
 
 class TargetCirclePriceProcessor(PromoProcessor):
     patterns = [
@@ -24,6 +25,6 @@ class TargetCirclePriceProcessor(PromoProcessor):
             original_price = item_data.get('unit_price') or item_data.get('sale_price') or item_data.get('regular_price', 0) if item.get("many") else item_data.get("sale_price") or item_data.get("regular_price", 0)
             new_price = max(0, original_price - amount_off)
             item_data["digital_coupon_price"] = amount_off
-            item_data["unit_price"] = round(new_price)
+            item_data["unit_price"] = base_round(new_price)
             
         return item_data

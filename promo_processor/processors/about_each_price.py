@@ -1,4 +1,5 @@
 from promo_processor.processor import PromoProcessor
+from promo_processor import base_round
 
 class AboutEachPriceProcessor(PromoProcessor, version=1):
     patterns = [r"\$(?P<unit_price>\d+(?:\.\d+)?)\s+each.\s+when\s+you\s+buy\s+(?P<quantity>\d+)\s",
@@ -18,8 +19,8 @@ class AboutEachPriceProcessor(PromoProcessor, version=1):
         volume_deals_price = unit_price * quantity
         unit_price_calculated = volume_deals_price / quantity
         
-        item_data['volume_deals_price'] = round(volume_deals_price, 2)
-        item_data['unit_price'] = round(unit_price_calculated, 2)
+        item_data['volume_deals_price'] = base_round(volume_deals_price, 2)
+        item_data['unit_price'] = base_round(unit_price_calculated, 2)
         item_data['digital_coupon_price'] = 0
         
         return item_data
@@ -31,8 +32,8 @@ class AboutEachPriceProcessor(PromoProcessor, version=1):
         volume_deals_price = unit_price * quantity
         unit_price_calculated = volume_deals_price / quantity
         
-        item_data['digital_coupon_price'] = round(unit_price_calculated, 2)
-        item_data["unit_price"] = round(unit_price_calculated, 2)
+        item_data['digital_coupon_price'] = base_round(unit_price_calculated, 2)
+        item_data["unit_price"] = base_round(unit_price_calculated, 2)
         
         return item_data
 
@@ -48,8 +49,8 @@ class SaveEachWhenBuyMoreProcessor(PromoProcessor, version=2):
 
         volume_deals_price = discount * min_quantity
         unit_price = ((original_price * min_quantity) - volume_deals_price) / min_quantity
-        item_data['volume_deals_price'] = round(volume_deals_price, 2)
-        item_data['unit_price'] = round(unit_price, 2)
+        item_data['volume_deals_price'] = base_round(volume_deals_price, 2)
+        item_data['unit_price'] = base_round(unit_price, 2)
         
         
         item_data['digital_coupon_price'] = 0
@@ -64,7 +65,7 @@ class SaveEachWhenBuyMoreProcessor(PromoProcessor, version=2):
 
         if quantity >= min_quantity:
             discounted_price = original_price - discount
-            item_data['digital_coupon_price'] = round(discounted_price, 2)
-            item_data["unit_price"] = round(discounted_price, 2)
+            item_data['digital_coupon_price'] = base_round(discounted_price, 2)
+            item_data["unit_price"] = base_round(discounted_price, 2)
             
         return item_data

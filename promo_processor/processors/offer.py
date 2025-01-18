@@ -1,5 +1,5 @@
 from promo_processor import PromoProcessor
-
+from promo_processor import base_round 
 class AddTotalForOffer(PromoProcessor, version=1):
     """Processor for 'Add 2 Total For Offer' type promotions."""
     
@@ -13,8 +13,8 @@ class AddTotalForOffer(PromoProcessor, version=1):
         volume_deals_price = price
         unit_price = price_for_quantity
             
-        item_data["volume_deals_price"] = round(volume_deals_price, 2)
-        item_data["unit_price"] = round(unit_price, 2)
+        item_data["volume_deals_price"] = base_round(volume_deals_price, 2)
+        item_data["unit_price"] = base_round(unit_price, 2)
         item_data["digital_coupon_price"] = 0
         return item_data
 
@@ -28,6 +28,6 @@ class AddTotalForOffer(PromoProcessor, version=1):
         volume_deals_price = price
         unit_price = price_for_quantity
         
-        item_data["unit_price"] = round(unit_price, 2)
-        item_data["digital_coupon_price"] = round(savings_value, 2)
+        item_data["unit_price"] = base_round(unit_price, 2)
+        item_data["digital_coupon_price"] = base_round(savings_value, 2)
         return item_data

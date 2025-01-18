@@ -1,4 +1,5 @@
 from promo_processor.processor import PromoProcessor
+from promo_processor import base_round
 
 
 class TargetCircleDealProcessor(PromoProcessor):
@@ -17,8 +18,8 @@ class TargetCircleDealProcessor(PromoProcessor):
         item_data = item.copy()
         select_price = float(match.group(1))
         
-        item_data['volume_deals_price'] = round(select_price, 2)
-        item_data['unit_price'] = round(select_price, 2)
+        item_data['volume_deals_price'] = base_round(select_price, 2)
+        item_data['unit_price'] = base_round(select_price, 2)
         item_data['digital_coupon_price'] = ""
         return item_data
 
@@ -26,7 +27,7 @@ class TargetCircleDealProcessor(PromoProcessor):
         item_data = item.copy()
         select_price = float(match.group(1))
         
-        item_data['volume_deals_price'] = round(select_price, 2)
-        item_data['unit_price'] = round(select_price, 2)
+        item_data['volume_deals_price'] = base_round(select_price, 2)
+        item_data['unit_price'] = base_round(select_price, 2)
         item_data['digital_coupon_price'] = ""
         return item_data

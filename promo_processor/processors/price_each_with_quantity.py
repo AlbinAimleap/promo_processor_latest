@@ -1,4 +1,5 @@
 from promo_processor.processor import PromoProcessor
+from promo_processor import base_round
 
 class PriceEachWithQuantityProcessor(PromoProcessor):
     """Processor for handling '$X price each with Y' type promotions."""
@@ -13,8 +14,8 @@ class PriceEachWithQuantityProcessor(PromoProcessor):
         price_each = float(match.group('price'))
         quantity = int(match.group('quantity'))
         
-        item_data["volume_deals_price"] = round(price_each, 2)
-        item_data["unit_price"] = round(price_each, 2)
+        item_data["volume_deals_price"] = base_round(price_each, 2)
+        item_data["unit_price"] = base_round(price_each, 2)
         item_data["digital_coupon_price"] = 0
         return item_data
 
@@ -24,8 +25,8 @@ class PriceEachWithQuantityProcessor(PromoProcessor):
         price_each = float(match.group('price'))
         quantity = int(match.group('quantity'))
         
-        item_data["unit_price"] = round(price_each, 2)
-        item_data["digital_coupon_price"] = round(price_each, 2)
+        item_data["unit_price"] = base_round(price_each, 2)
+        item_data["digital_coupon_price"] = base_round(price_each, 2)
         return item_data
         
         

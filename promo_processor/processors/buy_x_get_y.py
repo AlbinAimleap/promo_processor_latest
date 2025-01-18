@@ -1,4 +1,5 @@
 from promo_processor.processor import PromoProcessor
+from promo_processor import base_round
 import math
 class BuyGetFreeProcessor(PromoProcessor, version=1):
     patterns = [
@@ -17,8 +18,8 @@ class BuyGetFreeProcessor(PromoProcessor, version=1):
         volume_deals_price = price * quantity
         unit_price = volume_deals_price / total_quantity if total_quantity > 0 else 1
         
-        item_data['volume_deals_price'] = round(volume_deals_price, 2)
-        item_data['unit_price'] = round(unit_price, 2)
+        item_data['volume_deals_price'] = base_round(volume_deals_price, 2)
+        item_data['unit_price'] = base_round(unit_price, 2)
         item_data['digital_coupon_price'] = 0
         
         return item_data
@@ -36,8 +37,8 @@ class BuyGetFreeProcessor(PromoProcessor, version=1):
         volume_deals_price = price * quantity
         unit_price = volume_deals_price / total_quantity
         
-        item_data['unit_price'] = round(unit_price, 2)
-        item_data['digital_coupon_price'] = round(volume_deals_price, 2)
+        item_data['unit_price'] = base_round(unit_price, 2)
+        item_data['digital_coupon_price'] = base_round(volume_deals_price, 2)
         
         return item_data
 
@@ -61,8 +62,8 @@ class BuyGetDiscountProcessor(PromoProcessor, version=2):
         discount_amount = price - (price * (1 - discount / 100))
         unit_price = price + discount_amount
         
-        item_data['volume_deals_price'] = round(payable, 2)
-        item_data['unit_price'] = round(unit_price, 2)
+        item_data['volume_deals_price'] = base_round(payable, 2)
+        item_data['unit_price'] = base_round(unit_price, 2)
         item_data['digital_coupon_price'] = 0
         
         return item_data
@@ -81,8 +82,8 @@ class BuyGetDiscountProcessor(PromoProcessor, version=2):
         discount_amount = price - (price * (1 - discount / 100))
         unit_price = price + discount_amount
         
-        item_data['unit_price'] = round(payable, 2)
-        item_data['digital_coupon_price'] = round(unit_price, 2)
+        item_data['unit_price'] = base_round(payable, 2)
+        item_data['digital_coupon_price'] = base_round(unit_price, 2)
         
         return item_data
     
@@ -110,8 +111,8 @@ class SpendGetFreeProcessor(PromoProcessor, version=3):
             volume_deals_price = total_price
             unit_price = price / (quantity_needed+free)
             
-        item_data['volume_deals_price'] = round(volume_deals_price, 2)
-        item_data['unit_price'] = round(unit_price, 2)
+        item_data['volume_deals_price'] = base_round(volume_deals_price, 2)
+        item_data['unit_price'] = base_round(unit_price, 2)
         item_data['digital_coupon_price'] = 0
         
         return item_data
@@ -133,7 +134,7 @@ class SpendGetFreeProcessor(PromoProcessor, version=3):
             volume_deals_price = total_price
             unit_price = price / (quantity_needed+free)
             
-        item_data['unit_price'] = round(unit_price, 2)
-        item_data['digital_coupon_price'] = round(volume_deals_price, 2)
+        item_data['unit_price'] = base_round(unit_price, 2)
+        item_data['digital_coupon_price'] = base_round(volume_deals_price, 2)
         
         return item_data

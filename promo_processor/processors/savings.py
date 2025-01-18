@@ -1,4 +1,5 @@
 from promo_processor.processor import PromoProcessor
+from promo_processor import base_round
 import math
 class DollarOffProcessor(PromoProcessor, version=1):
     patterns = [
@@ -25,8 +26,8 @@ class DollarOffProcessor(PromoProcessor, version=1):
             volume_deals_price = price - savings_value
             unit_price = volume_deals_price
             
-        item_data["volume_deals_price"] = round(volume_deals_price, 2)
-        item_data["unit_price"] = round(unit_price, 2)
+        item_data["volume_deals_price"] = base_round(volume_deals_price, 2)
+        item_data["unit_price"] = base_round(unit_price, 2)
         item_data["digital_coupon_price"] = 0
         return item_data
 
@@ -46,8 +47,8 @@ class DollarOffProcessor(PromoProcessor, version=1):
             volume_deals_price = price - savings_value
             unit_price = volume_deals_price
         
-        item_data["unit_price"] = round(unit_price, 2)
-        item_data["digital_coupon_price"] = round(savings_value, 2)
+        item_data["unit_price"] = base_round(unit_price, 2)
+        item_data["digital_coupon_price"] = base_round(savings_value, 2)
         return item_data
 
 class CentsOffProcessor(PromoProcessor, version=2):
@@ -67,8 +68,8 @@ class CentsOffProcessor(PromoProcessor, version=2):
         volume_deals_price = price - savings_value
         unit_price = volume_deals_price
             
-        item_data["volume_deals_price"] = round(volume_deals_price, 2)
-        item_data["unit_price"] = round(unit_price, 2)
+        item_data["volume_deals_price"] = base_round(volume_deals_price, 2)
+        item_data["unit_price"] = base_round(unit_price, 2)
         item_data["digital_coupon_price"] = 0
         return item_data
 
@@ -83,8 +84,8 @@ class CentsOffProcessor(PromoProcessor, version=2):
         volume_deals_price = price - savings_value
         unit_price = volume_deals_price
         
-        item_data["unit_price"] = round(unit_price, 2)
-        item_data["digital_coupon_price"] = round(savings_value, 2)
+        item_data["unit_price"] = base_round(unit_price, 2)
+        item_data["digital_coupon_price"] = base_round(savings_value, 2)
         return item_data
 
 class PercentOffProcessor(PromoProcessor, version=3):
@@ -103,8 +104,8 @@ class PercentOffProcessor(PromoProcessor, version=3):
         volume_deals_price = price - savings_value
         unit_price = volume_deals_price
             
-        item_data["volume_deals_price"] = round(volume_deals_price, 2)
-        item_data["unit_price"] = round(unit_price, 2)
+        item_data["volume_deals_price"] = base_round(volume_deals_price, 2)
+        item_data["unit_price"] = base_round(unit_price, 2)
         item_data["digital_coupon_price"] = 0
         return item_data
 
@@ -118,8 +119,8 @@ class PercentOffProcessor(PromoProcessor, version=3):
         volume_deals_price = price - savings_value
         unit_price = volume_deals_price
         
-        item_data["unit_price"] = round(unit_price, 2)
-        item_data["digital_coupon_price"] = round(savings_value, 2)
+        item_data["unit_price"] = base_round(unit_price, 2)
+        item_data["digital_coupon_price"] = base_round(savings_value, 2)
         return item_data
     
 class PayPalRebateProcessor(PromoProcessor, version=4):
@@ -137,11 +138,9 @@ class PayPalRebateProcessor(PromoProcessor, version=4):
         discounted_price = price - (rebate_amount / quantity)
         unit_price = discounted_price
         
-        item_data["volume_deals_price"] = round(discounted_price, 2)
-        item_data["unit_price"] = round(unit_price, 2)
+        item_data["volume_deals_price"] = base_round(discounted_price, 2)
+        item_data["unit_price"] = base_round(unit_price, 2)
         item_data["digital_coupon_price"] = 0
-        item_data["rebate_amount"] = rebate_amount
-        item_data["rebate_type"] = "PayPal"
         return item_data
         
     def calculate_coupon(self, item, match):
@@ -153,17 +152,15 @@ class PayPalRebateProcessor(PromoProcessor, version=4):
         
         discounted_price = base_price - (rebate_amount / quantity)
         
-        item_data["unit_price"] = round(discounted_price, 2)
-        item_data["digital_coupon_price"] = round(rebate_amount / quantity, 2)
-        item_data["rebate_amount"] = rebate_amount
-        item_data["rebate_type"] = "PayPal"
+        item_data["unit_price"] = base_round(discounted_price, 2)
+        item_data["digital_coupon_price"] = base_round(rebate_amount / quantity ,2)
         return item_data
 
 class WinePackProcessor(PromoProcessor, version=5):
     patterns = [
         r'^Wine\s+(?P<percent>\d+)%\s+(?P<quantity>\d+)\s+Pack\s+\$(?P<price>\d+\.\d{2})\s+Save\s+Up\s+To:\s+\$(?P<savings>\d+\.\d{1})'
     ]
-    
+    #Wine 10% 4 Pack $10.99 Save Up To: $5.0
     def calculate_deal(self, item, match):
         item_data = item.copy()
         percent = float(match.group('percent'))
@@ -174,8 +171,8 @@ class WinePackProcessor(PromoProcessor, version=5):
         unit_price = pack_price / quantity
         volume_deals_price = pack_price
             
-        item_data["volume_deals_price"] = round(volume_deals_price, 2)
-        item_data["unit_price"] = round(unit_price, 2)
+        item_data["volume_deals_price"] = base_round(volume_deals_price, 2)
+        item_data["unit_price"] = base_round(unit_price, 2)
         item_data["digital_coupon_price"] = 0
         return item_data
 
@@ -188,8 +185,8 @@ class WinePackProcessor(PromoProcessor, version=5):
         
         unit_price = pack_price / quantity
         
-        item_data["unit_price"] = round(unit_price, 2)
-        item_data["digital_coupon_price"] = round(pack_price, 2)
+        item_data["unit_price"] = base_round(unit_price, 2)
+        item_data["digital_coupon_price"] = base_round(pack_price, 2)
         return item_data
 
 class HealthyAislesProcessor(PromoProcessor, version=6):
@@ -205,8 +202,8 @@ class HealthyAislesProcessor(PromoProcessor, version=6):
         volume_deals_price = price
         unit_price = price
             
-        item_data["volume_deals_price"] = round(volume_deals_price, 2)
-        item_data["unit_price"] = round(unit_price, 2)
+        item_data["volume_deals_price"] = base_round(volume_deals_price, 2)
+        item_data["unit_price"] = base_round(unit_price, 2)
         item_data["digital_coupon_price"] = 0
         return item_data
 
@@ -217,8 +214,8 @@ class HealthyAislesProcessor(PromoProcessor, version=6):
         
         unit_price = price
         
-        item_data["unit_price"] = round(unit_price, 2)
-        item_data["digital_coupon_price"] = round(savings, 2)
+        item_data["unit_price"] = base_round(unit_price, 2)
+        item_data["digital_coupon_price"] = base_round(savings, 2)
         return item_data
     
 
@@ -237,19 +234,17 @@ class DollarOffOnMoreProcessor(PromoProcessor, version=7):
             volume_deals_price = price - savings_value
             unit_price = volume_deals_price
         elif price == min_price:
-            
             quantity_needed = math.ceil(min_price/price)+1
             total_price = quantity_needed * price
             volume_deals_price = total_price - savings_value
-            unit_price = total_price / quantity_needed
+            unit_price = volume_deals_price / quantity_needed
         else:
-            
             quantity_needed = math.ceil(min_price/price)
             total_price = quantity_needed * price
             volume_deals_price = total_price - savings_value
-            unit_price = total_price / quantity_needed
-        item_data["volume_deals_price"] = round(volume_deals_price, 2)
-        item_data["unit_price"] = round(unit_price, 2)
+            unit_price = volume_deals_price / quantity_needed
+        item_data["volume_deals_price"] = base_round(volume_deals_price, 2)
+        item_data["unit_price"] = base_round(unit_price, 2)
         item_data["digital_coupon_price"] = 0
         return item_data
 
@@ -262,17 +257,15 @@ class DollarOffOnMoreProcessor(PromoProcessor, version=7):
             volume_deals_price = price - savings_value
             unit_price = volume_deals_price
         elif price == min_price:
-            
             quantity_needed = math.ceil(min_price/price)+1
             total_price = quantity_needed * price
             volume_deals_price = total_price - savings_value
-            unit_price = total_price / quantity_needed
+            unit_price = volume_deals_price / quantity_needed
         else:
-            
             quantity_needed = math.ceil(min_price/price)
             total_price = quantity_needed * price
             volume_deals_price = total_price - savings_value
-            unit_price = total_price / quantity_needed  
-        item_data["unit_price"] = round(unit_price, 2)
-        item_data["digital_coupon_price"] = round(volume_deals_price, 2)
+            unit_price = volume_deals_price / quantity_needed  
+        item_data["unit_price"] = base_round(unit_price, 2)
+        item_data["digital_coupon_price"] = base_round(volume_deals_price, 2)
         return item_data

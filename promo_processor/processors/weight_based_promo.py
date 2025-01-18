@@ -1,4 +1,5 @@
 from promo_processor.processor import PromoProcessor
+from promo_processor import base_round
 
 class WeightBasedPromoProcessor(PromoProcessor):
     patterns = [
@@ -13,8 +14,8 @@ class WeightBasedPromoProcessor(PromoProcessor):
         quantity = self._convert_word_to_number(quantity_word)
         unit_price = volume_deals_price / quantity
         
-        item_data["volume_deals_price"] = round(volume_deals_price, 2)
-        item_data["unit_price"] = round(unit_price, 2)
+        item_data["volume_deals_price"] = base_round(volume_deals_price, 2)
+        item_data["unit_price"] = base_round(unit_price, 2)
         item_data["digital_coupon_price"] = 0
         return item_data
         
@@ -27,8 +28,8 @@ class WeightBasedPromoProcessor(PromoProcessor):
         quantity = self._convert_word_to_number(quantity_word)
         unit_price = volume_deals_price / quantity
         
-        item_data["unit_price"] = round(unit_price, 2)
-        item_data["digital_coupon_price"] = round(volume_deals_price, 2)
+        item_data["unit_price"] = base_round(unit_price, 2)
+        item_data["digital_coupon_price"] = base_round(volume_deals_price, 2)
         return item_data
 
     def _convert_word_to_number(self, word: str) -> int:

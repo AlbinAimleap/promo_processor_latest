@@ -14,7 +14,7 @@ def main():
     args = argument_parser()
     file = args.file
     site = args.site
-    command = f"rm -rf logs/ && python main.py -f {file} -s {site} && python validation.py output/{site.title()}_{datetime.now().date()}.json && python check_new.py output/{site.title()}_{datetime.now().date()}_validated.json"
+    command = f"rm -rf logs/ && py main.py -f {file} -s {site} && py validation.py output/{site.title()}_{datetime.now().date()}.json && py check_new.py output/{site.title()}_{datetime.now().date()}_validated.json"
     subprocess.run(command, shell=True)
 
 

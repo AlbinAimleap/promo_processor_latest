@@ -1,4 +1,5 @@
 from promo_processor.processor import PromoProcessor
+from promo_processor import base_round
 
 
 class SaveOnQuantityTotalProcessor(PromoProcessor, version=1):
@@ -19,8 +20,8 @@ class SaveOnQuantityTotalProcessor(PromoProcessor, version=1):
         
         volume_deals_price = (total_price * quantity) - discount
         
-        item_data["volume_deals_price"] = round(discount, 2)
-        item_data["unit_price"] = round(volume_deals_price / quantity, 2)
+        item_data["volume_deals_price"] = base_round(discount, 2)
+        item_data["unit_price"] = base_round(volume_deals_price / quantity, 2)
         item_data["digital_coupon_price"] = 0
         return item_data
 
@@ -37,8 +38,8 @@ class SaveOnQuantityTotalProcessor(PromoProcessor, version=1):
         total_price = (unit_price * quantity) - discount
         unit_price = total_price / quantity if quantity > 0 else 0
         
-        item_data["unit_price"] = round(unit_price, 2)
-        item_data["digital_coupon_price"] = round(discount, 2)
+        item_data["unit_price"] = base_round(unit_price, 2)
+        item_data["digital_coupon_price"] = base_round(discount, 2)
         return item_data
 
 
@@ -60,8 +61,8 @@ class SaveOnQuantityProductProcessor(PromoProcessor, version=2):
         
         volume_deals_price = (total_price * quantity) - discount
         
-        item_data["volume_deals_price"] = round(discount, 2)
-        item_data["unit_price"] = round(volume_deals_price / quantity, 2)
+        item_data["volume_deals_price"] = base_round(discount, 2)
+        item_data["unit_price"] = base_round(volume_deals_price / quantity, 2)
         item_data["digital_coupon_price"] = 0
         return item_data
 
@@ -78,8 +79,8 @@ class SaveOnQuantityProductProcessor(PromoProcessor, version=2):
         total_price = (unit_price * quantity) - discount
         unit_price = total_price / quantity if quantity > 0 else 0
         
-        item_data["unit_price"] = round(unit_price, 2)
-        item_data["digital_coupon_price"] = round(discount, 2)
+        item_data["unit_price"] = base_round(unit_price, 2)
+        item_data["digital_coupon_price"] = base_round(discount, 2)
         return item_data
 
 
@@ -101,8 +102,8 @@ class SaveOnQuantityLimitProcessor(PromoProcessor, version=3):
         
         volume_deals_price = (total_price * quantity) - discount
         
-        item_data["volume_deals_price"] = round(discount, 2)
-        item_data["unit_price"] = round(volume_deals_price / quantity, 2)
+        item_data["volume_deals_price"] = base_round(discount, 2)
+        item_data["unit_price"] = base_round(volume_deals_price / quantity, 2)
         item_data["digital_coupon_price"] = 0
         return item_data
 
@@ -119,8 +120,8 @@ class SaveOnQuantityLimitProcessor(PromoProcessor, version=3):
         total_price = (unit_price * quantity) - discount
         unit_price = total_price / quantity if quantity > 0 else 0
         
-        item_data["unit_price"] = round(unit_price, 2)
-        item_data["digital_coupon_price"] = round(discount, 2)
+        item_data["unit_price"] = base_round(unit_price, 2)
+        item_data["digital_coupon_price"] = base_round(discount, 2)
         return item_data
 
 
@@ -144,8 +145,8 @@ class SaveOnQuantitySimpleProcessor(PromoProcessor, version=4):
         
         volume_deals_price = (total_price * quantity) - discount
         
-        item_data["volume_deals_price"] = round(discount, 2)
-        item_data["unit_price"] = round(volume_deals_price / quantity, 2)
+        item_data["volume_deals_price"] = base_round(discount, 2)
+        item_data["unit_price"] = base_round(volume_deals_price / quantity, 2)
         item_data["digital_coupon_price"] = 0
         return item_data
 
@@ -162,6 +163,6 @@ class SaveOnQuantitySimpleProcessor(PromoProcessor, version=4):
         total_price = (unit_price * quantity) - discount
         unit_price = total_price / quantity if quantity > 0 else 0
         
-        item_data["unit_price"] = round(unit_price, 2)
-        item_data["digital_coupon_price"] = round(discount, 2)
+        item_data["unit_price"] = base_round(unit_price, 2)
+        item_data["digital_coupon_price"] = base_round(discount, 2)
         return item_data

@@ -2,6 +2,7 @@ from argparse import ArgumentParser
 import json
 from typing import List, Dict, Any
 from promo_processor import PromoProcessor
+from promo_processor import base_round
 from pathlib import Path
 import pandas as pd
 from datetime import datetime
