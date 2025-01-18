@@ -10,7 +10,6 @@ class GiftCardProcessor(PromoProcessor, version=1):
 
     def calculate_deal(self, item, match):
         """Process gift card promotions for deals."""
-    
         item_data = item.copy()
         quantity = int(match.group('quantity'))
         discount = float(match.group('amount'))
@@ -39,7 +38,6 @@ class GiftCardProcessor(PromoProcessor, version=1):
 
 class GiftCardPurchaseProcessor(PromoProcessor, version=2):
     """Processor for handling gift card promotions with purchase amount."""
-
     patterns = [
         r'\$(?P<amount>\d+(?:\.\d+)?)\s+(?P<store>[\w\s]+)\s+GiftCard\s+with\s+\$(?P<purchase>\d+(?:\.\d+)?)\s+select\s+(?P<category>[\w\s&]+)\s+purchase'
     ]

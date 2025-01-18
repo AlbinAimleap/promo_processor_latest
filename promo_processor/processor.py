@@ -339,6 +339,7 @@ class PromoProcessor(ABC):
         """
         score = len(pattern) * 2  # Base score from pattern length
         score += len(re.findall(r'\((?!\?:).*?\)', pattern)) * 15  # Capturing groups weight
+        score += len(re.findall(r'\(.*?\)', pattern)) * 10  # Additional group weight
         score -= len(re.findall(r'[\*\+\?]', pattern)) * 8  # Wildcards penalty
         score -= len(re.findall(r'\{.*?\}', pattern)) * 6  # Quantifiers penalty
         score -= len(re.findall(r'\.', pattern)) * 4  # Dot wildcards penalty
@@ -347,7 +348,6 @@ class PromoProcessor(ABC):
         score += len(re.findall(r'\^|\$', pattern)) * 4  # Start/end anchors bonus
         score += len(re.findall(r'\(\?:.*?\)', pattern)) * 8  # Non-capturing groups bonus
         return score
-
     @classmethod
     def matcher(cls, description: str) -> str:
         """
