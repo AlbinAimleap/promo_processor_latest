@@ -223,7 +223,7 @@ class HealthyAislesProcessor(PromoProcessor, version=6):
 class DollarOffOnMoreProcessor(PromoProcessor, version=7):
     #$1.00 OFF of $1 or more
     patterns = [
-        r'\$(?P<savings>\d+\.\d{2})\s+off\s+of\s+\$(?P<min_price>\d+)\s+or\s+more',  # Matches "Save $3.00 off 10 ..."
+        r'\$(?P<savings>\d+\.\d{2})\s+off\s+of\s+\$(?P<min_price>\d+)\s+or\s+more',  # Matches "$1.00 OFF of $1 or more"
     ]    
     def calculate_deal(self, item, match):
         item_data = item.copy()
