@@ -65,7 +65,7 @@ class DollarDiscountQuantityProcessor(PromoProcessor, version=2):
         price = item_data.get("sale_price") or item_data.get("regular_price", 0)
         
         if limit > quantity:
-            unit_price = (price * limit) - (discount_value / quantity)
+            unit_price = ((price * quantity) - discount_value) / quantity
         else:
             unit_price = price - (discount_value / quantity)
             
