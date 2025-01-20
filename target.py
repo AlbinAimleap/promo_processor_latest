@@ -14,6 +14,8 @@ class Target:
         self.processor.apply(self.format_zeros)
         self.processor.apply(self.format_date)
         
+        
+        
     
     def sort_promos(self, data):
         patterns = [

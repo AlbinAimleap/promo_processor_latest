@@ -23,6 +23,8 @@ class Processor:
         parser.add_argument("-o", "--output", help="Output directory", default="output")
         parser.add_argument("-s", "--site", help="Site Name", choices=['jewel', 'marianos', 'target'], required=True)
         parser.add_argument("-t", "--test", help="Test suite", action="store_true")        
+        parser.add_argument("-l", "--limit", help="limit", required=False)        
+        parser.add_argument("-u", "--upc", help="UPC")        
         return parser.parse_args()
     
     def load_file(self):
@@ -37,7 +39,14 @@ class Processor:
             return pd.read_excel(file)
         raise ValueError("Invalid file format")
     
-    def load_site(self):
+    def get_upc(self, upc):
+        return [i for i in self.data if i['upc'] == upc]
+    
+    def load_site(self, limit=None, upc=None):
+        if limit:
+            self.data = self.data[:limit]
+        if upc:
+            self.data = self.get_upc(upc)
         if self.args.site == "jewel":
             return Jewel(PromoProcessor, self.data)
         elif self.args.site == "marianos":
@@ -54,7 +63,7 @@ class Processor:
     def process(self):
         output_dir = Path(self.args.output)
         output_dir.mkdir(parents=True, exist_ok=True)
-        processed_data = self.load_site()
+        processed_data = self.load_site(limit=self.args.limit, upc=self.args.upc)
         debug_dir = Path(__file__).parent / "debug"
         
         if not debug_dir.exists():

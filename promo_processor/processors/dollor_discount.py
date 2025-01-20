@@ -70,7 +70,7 @@ class DollarDiscountQuantityProcessor(PromoProcessor, version=2):
             unit_price = price - (discount_value / quantity)
             
         item_data["unit_price"] = base_round(unit_price, 2)
-        item_data["digital_coupon_price"] = base_round(discount_value / quantity, 2)
+        item_data["digital_coupon_price"] = base_round(discount_value, 2)
         item_data["quantity"] = quantity
         return item_data
 
@@ -105,7 +105,7 @@ class DollarDiscountLimitProcessor(PromoProcessor, version=3):
         unit_price = price - (discount_value / limit)
             
         item_data["unit_price"] = base_round(unit_price, 2)
-        item_data["digital_coupon_price"] = base_round(discount_value / limit, 2)
+        item_data["digital_coupon_price"] = base_round(discount_value, 2)
         item_data["quantity"] = limit
         return item_data
 

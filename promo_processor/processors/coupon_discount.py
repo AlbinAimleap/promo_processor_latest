@@ -14,23 +14,24 @@ class CouponDiscountProcessor(PromoProcessor):
         discount = float(match.group('discount'))
         price = item_data.get("promo_price", item_data.get("regular_price", 0))
         volume_deals_price = price - discount
+
         
         item_data['volume_deals_price'] = base_round(volume_deals_price, 2)
-        item_data['unit_price'] = base_round(volume_deals_price / 1, 2)
+        item_data['unit_price'] = base_round(volume_deals_price, 2)
         item_data['digital_coupon_price'] = ""
         
         return item_data
     
     def calculate_coupon(self, item, match):
         """Process coupon discount calculation."""
-        
         item_data = item.copy()
         discount = float(match.group('discount'))
         price = item_data.get("unit_price") or item_data.get("sale_price") or item_data.get("regular_price", 0) if item.get("many") else item_data.get("sale_price") or item_data.get("regular_price", 0)
         volume_deals_price = price - discount
         
-        item_data['digital_coupon_price'] = base_round(volume_deals_price, 2)
-        item_data['unit_price'] = base_round(volume_deals_price / 1, 2)
+        
+        item_data['digital_coupon_price'] = base_round(discount)
+        item_data['unit_price'] = base_round(volume_deals_price)
         return item_data
         
 class AddtionalDiscountProcessor(PromoProcessor,version=2):
@@ -71,6 +72,7 @@ class AddtionalDiscountProcessor(PromoProcessor,version=2):
         discount = int(match.group('discount'))
         discounted_rate = discount/100
         price = item_data.get('regular_price', 0)
+        discounted_price = price * discounted_rate
         if price>spend:
             volume_deals_price = price
             unit_price = price * discounted_rate
@@ -81,6 +83,6 @@ class AddtionalDiscountProcessor(PromoProcessor,version=2):
             volume_deals_price = total_price - (total_price*discounted_rate)
             unit_price = volume_deals_price /quantity_needed 
         
-        item_data['digital_coupon_price'] = base_round(volume_deals_price, 2)
+        item_data['digital_coupon_price'] = base_round(discounted_price, 2)
         item_data['unit_price'] = base_round(unit_price, 2)
         return item_data

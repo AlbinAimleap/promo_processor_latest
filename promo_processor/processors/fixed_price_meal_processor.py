@@ -32,10 +32,7 @@ class BasicFixedPriceProcessor(PromoProcessor, version=5):
             price = float(match.group('price')) / 100
             
         item_data["digital_coupon_price"] = base_round(price, 2)
-        item_data["unit_price"] = base_round(price, 2)
-        item_data["required_quantity"] = 1
-        item_data["limit"] = 0
-        
+        item_data["unit_price"] = base_round(price, 2)        
         return item_data
 
 class LimitedFixedPriceProcessor(PromoProcessor, version=2):
@@ -100,8 +97,5 @@ class MultiQuantityFixedPriceProcessor(PromoProcessor, version=3):
             quantity = min_quantity
             
         item_data["digital_coupon_price"] = base_round(price, 2)
-        item_data["unit_price"] = base_round(price / quantity, 2)
-        item_data["required_quantity"] = quantity
-        item_data["limit"] = 0
-        
+        item_data["unit_price"] = base_round(price / quantity, 2)      
         return item_data

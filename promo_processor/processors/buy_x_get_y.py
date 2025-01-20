@@ -1,6 +1,7 @@
 from promo_processor.processor import PromoProcessor
 from promo_processor import base_round
 import math
+
 class BuyGetFreeProcessor(PromoProcessor, version=1):
     patterns = [
         r"Buy\s+(?P<quantity>\d+),?\s+Get\s+(?P<free>\d+)\s+Free"
@@ -56,13 +57,11 @@ class BuyGetDiscountProcessor(PromoProcessor, version=2):
         free = int(match.group('free'))
         discount = int(match.group('discount'))
         price = item_data.get('sale_price') or item_data.get('regular_price', 0)
-        total_quantity = quantity + free
-        payable = quantity * price
-        total_price = price * total_quantity
-        discount_amount = price - (price * (1 - discount / 100))
-        unit_price = price + discount_amount
+        volume_deals_price = price + price -(price * (discount / 100))
+        unit_price = volume_deals_price / (quantity + free)
+       
         
-        item_data['volume_deals_price'] = base_round(payable, 2)
+        item_data['volume_deals_price'] = base_round(volume_deals_price, 2)
         item_data['unit_price'] = base_round(unit_price, 2)
         item_data['digital_coupon_price'] = 0
         
@@ -76,14 +75,11 @@ class BuyGetDiscountProcessor(PromoProcessor, version=2):
         free = int(match.group('free'))
         discount = int(match.group('discount'))
         price = item_data.get('unit_price') or item_data.get("sale_price") or item_data.get("regular_price", 0) if item.get("many") else item_data.get("sale_price") or item_data.get("regular_price", 0)
-        total_quantity = quantity + free
-        payable = quantity * price
-        total_price = price * total_quantity
-        discount_amount = price - (price * (1 - discount / 100))
-        unit_price = price + discount_amount
+        digital_coupon_price = price + price - (price * (discount / 100))
+        unit_price = digital_coupon_price / (quantity + free)
         
-        item_data['unit_price'] = base_round(payable, 2)
-        item_data['digital_coupon_price'] = base_round(unit_price, 2)
+        item_data['unit_price'] = base_round(unit_price, 2)
+        item_data['digital_coupon_price'] = base_round(digital_coupon_price, 2)
         
         return item_data
     

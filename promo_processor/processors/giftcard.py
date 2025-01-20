@@ -3,9 +3,11 @@ from promo_processor import base_round
 
 class GiftCardProcessor(PromoProcessor, version=1):
     """Processor for handling gift card promotions."""
+    # $5 Target GiftCard when you buy 2 sleep aid supplements
 
     patterns = [
-        r'\$(?P<amount>\d+(?:\.\d+)?)\s+(?P<store>[\w\s]+)\s+GiftCard\s+with\s+(?P<quantity>\d+)\s+select\s+(?P<category>[\w\s&]+)'
+        r'\$(?P<amount>\d+(?:\.\d+)?)\s+(?P<store>[\w\s]+)\s+GiftCard\s+with\s+(?P<quantity>\d+)\s+select\s+(?P<category>[\w\s&]+)',
+        r'\$(?P<amount>\d+(?:\.\d+)?)\s+(?P<store>[\w\s]+)\s+GiftCard\s+when\s+you\s+buy\s+(?P<quantity>\d+)\s+.*',
     ]
 
     def calculate_deal(self, item, match):
@@ -72,13 +74,12 @@ class GiftCardPurchaseProcessor(PromoProcessor, version=2):
         unit_price = price - (price * discount_rate)
         
         item_data["unit_price"] = base_round(unit_price, 2)
-        item_data["digital_coupon_price"] = base_round(savings_value, 2)
+        item_data["digital_coupon_price"] = base_round(discount_value, 2)
         return item_data
 
 
 class SimpleGiftCardProcessor(PromoProcessor, version=3):
     """Processor for handling simple gift card promotions."""
-
     patterns = [
         r'\$(?P<amount>\d+)\s+(?P<store>[\w\s]+)\s+GiftCard\s+with\s+(?P<purchase>\d+)\s+(?P<item>[\w\s]+)'
     ]
@@ -108,7 +109,7 @@ class SimpleGiftCardProcessor(PromoProcessor, version=3):
         unit_price = discount / quantity
         
         item_data["unit_price"] = base_round(unit_price, 2)
-        item_data["digital_coupon_price"] = base_round(discount, 2)
+        item_data["digital_coupon_price"] = base_round(discount_value, 2)
         return item_data
 
 

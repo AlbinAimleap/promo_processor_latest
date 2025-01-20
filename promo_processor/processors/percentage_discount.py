@@ -179,5 +179,5 @@ class PercentageOffSaveProcessor(PromoProcessor, version=5):
         discounted_price = total_price - (total_price * discount_decimal)
         
         item_data["unit_price"] = base_round(discounted_price / limit, 2)
-        item_data["digital_coupon_price"] = base_round(discounted_price, 2)
+        item_data["digital_coupon_price"] = base_round(total_price * discount_decimal, 2)
         return item_data

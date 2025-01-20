@@ -19,13 +19,13 @@ def load_processors():
                           and issubclass(getattr(module, attr), PromoProcessor)])
 
 
-def base_round(value , places=2):
+def base_round(value , places=3):
     str_value = str(value)
     if '.' in str_value:
         base, decimal = str_value.split('.')
         if len(decimal)>places:
             decimal=decimal[:places]
         str_value = '.'.join([base,decimal])
-    return float(str_value) 
+    return round(float(str_value), 2)
 
 load_processors()

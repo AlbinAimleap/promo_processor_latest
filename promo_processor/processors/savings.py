@@ -1,6 +1,8 @@
 from promo_processor.processor import PromoProcessor
 from promo_processor import base_round
 import math
+
+
 class DollarOffProcessor(PromoProcessor, version=1):
     patterns = [
         r'^Save\s+\$(?P<savings>\d+\.\d{2})\s+off\s+(?P<quantity>\d+)\s+',  # Matches "Save $3.00 off 10 ..."
@@ -91,7 +93,9 @@ class CentsOffProcessor(PromoProcessor, version=2):
 class PercentOffProcessor(PromoProcessor, version=3):
     patterns = [
         r'^Save\s+(?P<percent>\d+)%\s+Off',  # Matches "Save 20% Off"
-        r'^Save\s+(?P<percent>\d+)%\s+in\s+cart'  # Matches "Save 10% in cart on Altitude"
+        r'^Save\s+(?P<percent>\d+)%\s+in\s+cart',  # Matches "Save 10% in cart on Altitude"
+        r'^Save\s+(?P<percent>\d+)%\s+on\s+[:]?\w+'  # Matches "Save 10% on product"
+        
     ]
     
     def calculate_deal(self, item, match):
@@ -153,7 +157,7 @@ class PayPalRebateProcessor(PromoProcessor, version=4):
         discounted_price = base_price - (rebate_amount / quantity)
         
         item_data["unit_price"] = base_round(discounted_price, 2)
-        item_data["digital_coupon_price"] = base_round(rebate_amount / quantity ,2)
+        item_data["digital_coupon_price"] = base_round(rebate_amount ,2)
         return item_data
 
 class WinePackProcessor(PromoProcessor, version=5):
@@ -223,7 +227,7 @@ class HealthyAislesProcessor(PromoProcessor, version=6):
 class DollarOffOnMoreProcessor(PromoProcessor, version=7):
     #$1.00 OFF of $1 or more
     patterns = [
-        r'\$(?P<savings>\d+\.\d{2})\s+off\s+of\s+\$(?P<min_price>\d+)\s+or\s+more',  # Matches "Save $3.00 off 10 ..."
+        # r'\$(?P<savings>\d+\.\d{2})\s+off\s+of\s+\$(?P<min_price>\d+)\s+or\s+more',  # Matches "Save $3.00 off 10 ..."
     ]    
     def calculate_deal(self, item, match):
         item_data = item.copy()
@@ -267,5 +271,5 @@ class DollarOffOnMoreProcessor(PromoProcessor, version=7):
             volume_deals_price = total_price - savings_value
             unit_price = volume_deals_price / quantity_needed  
         item_data["unit_price"] = base_round(unit_price, 2)
-        item_data["digital_coupon_price"] = base_round(volume_deals_price, 2)
+        item_data["digital_coupon_price"] = base_round(savings_value, 2)
         return item_data
