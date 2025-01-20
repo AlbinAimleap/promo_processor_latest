@@ -15,8 +15,8 @@ class QuantityForPriceProcessor(PromoProcessor):
         quantity = int(match.group('quantity'))
         volume_deals_price = float(match.group('volume_deals_price'))
         
-        item_data["volume_deals_price"] = base_round(volume_deals_price, 2)
-        item_data["unit_price"] = base_round(volume_deals_price / quantity, 2)
+        item_data["volume_deals_price"] = base_round(volume_deals_price)
+        item_data["unit_price"] = base_round(volume_deals_price / quantity)
         item_data["digital_coupon_price"] = 0
         return item_data
 
@@ -26,6 +26,6 @@ class QuantityForPriceProcessor(PromoProcessor):
         quantity = int(match.group('quantity'))
         volume_deals_price = float(match.group('volume_deals_price'))
         
-        item_data["unit_price"] = base_round(volume_deals_price / quantity, 2)
-        item_data["digital_coupon_price"] = base_round(volume_deals_price, 2)
+        item_data["unit_price"] = base_round(volume_deals_price / quantity)
+        item_data["digital_coupon_price"] = base_round(volume_deals_price)
         return item_data

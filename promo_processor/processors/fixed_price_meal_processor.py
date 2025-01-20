@@ -17,8 +17,8 @@ class BasicFixedPriceProcessor(PromoProcessor, version=5):
         if "¢" in item_data["volume_deals_description"]:
             price = float(match.group('price')) / 100
             
-        item_data["volume_deals_price"] = base_round(price, 2)
-        item_data["unit_price"] = base_round(price, 2)
+        item_data["volume_deals_price"] = base_round(price)
+        item_data["unit_price"] = base_round(price)
         item_data["digital_coupon_price"] = 0 
         item_data["required_quantity"] = 1
         item_data["limit"] = 0
@@ -31,8 +31,8 @@ class BasicFixedPriceProcessor(PromoProcessor, version=5):
         if "¢" in item_data["digital_coupon_description"]:
             price = float(match.group('price')) / 100
             
-        item_data["digital_coupon_price"] = base_round(price, 2)
-        item_data["unit_price"] = base_round(price, 2)        
+        item_data["digital_coupon_price"] = base_round(price)
+        item_data["unit_price"] = base_round(price)        
         return item_data
 
 class LimitedFixedPriceProcessor(PromoProcessor, version=2):
@@ -47,8 +47,8 @@ class LimitedFixedPriceProcessor(PromoProcessor, version=2):
         price = float(match.group('price'))
         quantity = int(match.group('quantity'))
         
-        item_data["volume_deals_price"] = base_round(price, 2)
-        item_data["unit_price"] = base_round(price / quantity, 2)
+        item_data["volume_deals_price"] = base_round(price)
+        item_data["unit_price"] = base_round(price / quantity)
         item_data["digital_coupon_price"] = 0        
         return item_data
     
@@ -57,8 +57,8 @@ class LimitedFixedPriceProcessor(PromoProcessor, version=2):
         price = float(match.group('price'))
         quantity = int(match.group('quantity'))
         
-        item_data["digital_coupon_price"] = base_round(price, 2)
-        item_data["unit_price"] = base_round(price / quantity, 2)
+        item_data["digital_coupon_price"] = base_round(price)
+        item_data["unit_price"] = base_round(price / quantity)
         return item_data
 
 class MultiQuantityFixedPriceProcessor(PromoProcessor, version=3):
@@ -79,8 +79,8 @@ class MultiQuantityFixedPriceProcessor(PromoProcessor, version=3):
         if min_quantity > quantity:
             quantity = min_quantity
             
-        item_data["volume_deals_price"] = base_round(price, 2)
-        item_data["unit_price"] = base_round(price / quantity, 2)
+        item_data["volume_deals_price"] = base_round(price)
+        item_data["unit_price"] = base_round(price / quantity)
         item_data["digital_coupon_price"] = 0 
         item_data["required_quantity"] = quantity
         item_data["limit"] = 0
@@ -96,6 +96,6 @@ class MultiQuantityFixedPriceProcessor(PromoProcessor, version=3):
         if min_quantity > quantity:
             quantity = min_quantity
             
-        item_data["digital_coupon_price"] = base_round(price, 2)
-        item_data["unit_price"] = base_round(price / quantity, 2)      
+        item_data["digital_coupon_price"] = base_round(price)
+        item_data["unit_price"] = base_round(price / quantity)      
         return item_data

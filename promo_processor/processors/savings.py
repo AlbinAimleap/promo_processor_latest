@@ -28,8 +28,8 @@ class DollarOffProcessor(PromoProcessor, version=1):
             volume_deals_price = price - savings_value
             unit_price = volume_deals_price
             
-        item_data["volume_deals_price"] = base_round(volume_deals_price, 2)
-        item_data["unit_price"] = base_round(unit_price, 2)
+        item_data["volume_deals_price"] = base_round(volume_deals_price)
+        item_data["unit_price"] = base_round(unit_price)
         item_data["digital_coupon_price"] = 0
         return item_data
 
@@ -49,8 +49,8 @@ class DollarOffProcessor(PromoProcessor, version=1):
             volume_deals_price = price - savings_value
             unit_price = volume_deals_price
         
-        item_data["unit_price"] = base_round(unit_price, 2)
-        item_data["digital_coupon_price"] = base_round(savings_value, 2)
+        item_data["unit_price"] = base_round(unit_price)
+        item_data["digital_coupon_price"] = base_round(savings_value)
         return item_data
 
 class CentsOffProcessor(PromoProcessor, version=2):
@@ -70,8 +70,8 @@ class CentsOffProcessor(PromoProcessor, version=2):
         volume_deals_price = price - savings_value
         unit_price = volume_deals_price
             
-        item_data["volume_deals_price"] = base_round(volume_deals_price, 2)
-        item_data["unit_price"] = base_round(unit_price, 2)
+        item_data["volume_deals_price"] = base_round(volume_deals_price)
+        item_data["unit_price"] = base_round(unit_price)
         item_data["digital_coupon_price"] = 0
         return item_data
 
@@ -86,8 +86,8 @@ class CentsOffProcessor(PromoProcessor, version=2):
         volume_deals_price = price - savings_value
         unit_price = volume_deals_price
         
-        item_data["unit_price"] = base_round(unit_price, 2)
-        item_data["digital_coupon_price"] = base_round(savings_value, 2)
+        item_data["unit_price"] = base_round(unit_price)
+        item_data["digital_coupon_price"] = base_round(savings_value)
         return item_data
 
 class PercentOffProcessor(PromoProcessor, version=3):
@@ -108,8 +108,8 @@ class PercentOffProcessor(PromoProcessor, version=3):
         volume_deals_price = price - savings_value
         unit_price = volume_deals_price
             
-        item_data["volume_deals_price"] = base_round(volume_deals_price, 2)
-        item_data["unit_price"] = base_round(unit_price, 2)
+        item_data["volume_deals_price"] = base_round(volume_deals_price)
+        item_data["unit_price"] = base_round(unit_price)
         item_data["digital_coupon_price"] = 0
         return item_data
 
@@ -123,8 +123,8 @@ class PercentOffProcessor(PromoProcessor, version=3):
         volume_deals_price = price - savings_value
         unit_price = volume_deals_price
         
-        item_data["unit_price"] = base_round(unit_price, 2)
-        item_data["digital_coupon_price"] = base_round(savings_value, 2)
+        item_data["unit_price"] = base_round(unit_price)
+        item_data["digital_coupon_price"] = base_round(savings_value)
         return item_data
     
 class PayPalRebateProcessor(PromoProcessor, version=4):
@@ -142,8 +142,8 @@ class PayPalRebateProcessor(PromoProcessor, version=4):
         discounted_price = price - (rebate_amount / quantity)
         unit_price = discounted_price
         
-        item_data["volume_deals_price"] = base_round(discounted_price, 2)
-        item_data["unit_price"] = base_round(unit_price, 2)
+        item_data["volume_deals_price"] = base_round(discounted_price)
+        item_data["unit_price"] = base_round(unit_price)
         item_data["digital_coupon_price"] = 0
         return item_data
         
@@ -156,7 +156,7 @@ class PayPalRebateProcessor(PromoProcessor, version=4):
         
         discounted_price = base_price - (rebate_amount / quantity)
         
-        item_data["unit_price"] = base_round(discounted_price, 2)
+        item_data["unit_price"] = base_round(discounted_price)
         item_data["digital_coupon_price"] = base_round(rebate_amount ,2)
         return item_data
 
@@ -175,8 +175,8 @@ class WinePackProcessor(PromoProcessor, version=5):
         unit_price = pack_price / quantity
         volume_deals_price = pack_price
             
-        item_data["volume_deals_price"] = base_round(volume_deals_price, 2)
-        item_data["unit_price"] = base_round(unit_price, 2)
+        item_data["volume_deals_price"] = base_round(volume_deals_price)
+        item_data["unit_price"] = base_round(unit_price)
         item_data["digital_coupon_price"] = 0
         return item_data
 
@@ -189,8 +189,8 @@ class WinePackProcessor(PromoProcessor, version=5):
         
         unit_price = pack_price / quantity
         
-        item_data["unit_price"] = base_round(unit_price, 2)
-        item_data["digital_coupon_price"] = base_round(pack_price, 2)
+        item_data["unit_price"] = base_round(unit_price)
+        item_data["digital_coupon_price"] = base_round(pack_price)
         return item_data
 
 class HealthyAislesProcessor(PromoProcessor, version=6):
@@ -206,8 +206,8 @@ class HealthyAislesProcessor(PromoProcessor, version=6):
         volume_deals_price = price
         unit_price = price
             
-        item_data["volume_deals_price"] = base_round(volume_deals_price, 2)
-        item_data["unit_price"] = base_round(unit_price, 2)
+        item_data["volume_deals_price"] = base_round(volume_deals_price)
+        item_data["unit_price"] = base_round(unit_price)
         item_data["digital_coupon_price"] = 0
         return item_data
 
@@ -218,8 +218,8 @@ class HealthyAislesProcessor(PromoProcessor, version=6):
         
         unit_price = price
         
-        item_data["unit_price"] = base_round(unit_price, 2)
-        item_data["digital_coupon_price"] = base_round(savings, 2)
+        item_data["unit_price"] = base_round(unit_price)
+        item_data["digital_coupon_price"] = base_round(savings)
         return item_data
     
 
@@ -247,8 +247,8 @@ class DollarOffOnMoreProcessor(PromoProcessor, version=7):
             total_price = quantity_needed * price
             volume_deals_price = total_price - savings_value
             unit_price = volume_deals_price / quantity_needed
-        item_data["volume_deals_price"] = base_round(volume_deals_price, 2)
-        item_data["unit_price"] = base_round(unit_price, 2)
+        item_data["volume_deals_price"] = base_round(volume_deals_price)
+        item_data["unit_price"] = base_round(unit_price)
         item_data["digital_coupon_price"] = 0
         return item_data
 
@@ -270,6 +270,6 @@ class DollarOffOnMoreProcessor(PromoProcessor, version=7):
             total_price = quantity_needed * price
             volume_deals_price = total_price - savings_value
             unit_price = volume_deals_price / quantity_needed  
-        item_data["unit_price"] = base_round(unit_price, 2)
-        item_data["digital_coupon_price"] = base_round(savings_value, 2)
+        item_data["unit_price"] = base_round(unit_price)
+        item_data["digital_coupon_price"] = base_round(savings_value)
         return item_data

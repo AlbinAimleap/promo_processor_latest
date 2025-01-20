@@ -16,8 +16,8 @@ class CouponDiscountProcessor(PromoProcessor):
         volume_deals_price = price - discount
 
         
-        item_data['volume_deals_price'] = base_round(volume_deals_price, 2)
-        item_data['unit_price'] = base_round(volume_deals_price, 2)
+        item_data['volume_deals_price'] = base_round(volume_deals_price)
+        item_data['unit_price'] = base_round(volume_deals_price)
         item_data['digital_coupon_price'] = ""
         
         return item_data
@@ -58,8 +58,8 @@ class AddtionalDiscountProcessor(PromoProcessor,version=2):
             volume_deals_price = total_price - (total_price*discounted_rate)
             unit_price = volume_deals_price /quantity_needed 
         
-        item_data['volume_deals_price'] = base_round(volume_deals_price, 2)
-        item_data['unit_price'] = base_round(unit_price, 2)
+        item_data['volume_deals_price'] = base_round(volume_deals_price)
+        item_data['unit_price'] = base_round(unit_price)
         item_data['digital_coupon_price'] = ""
         
         return item_data
@@ -83,6 +83,6 @@ class AddtionalDiscountProcessor(PromoProcessor,version=2):
             volume_deals_price = total_price - (total_price*discounted_rate)
             unit_price = volume_deals_price /quantity_needed 
         
-        item_data['digital_coupon_price'] = base_round(discounted_price, 2)
-        item_data['unit_price'] = base_round(unit_price, 2)
+        item_data['digital_coupon_price'] = base_round(discounted_price)
+        item_data['unit_price'] = base_round(unit_price)
         return item_data

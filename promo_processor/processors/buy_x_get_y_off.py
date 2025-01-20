@@ -33,8 +33,8 @@ class BuyGetDiscountProcessor(PromoProcessor):
             volume_deals_price = (price * quantity) - ((price * quantity) * (discount_percentage / 100))
             unit_price = volume_deals_price / quantity
         
-        item_data['volume_deals_price'] = base_round(volume_deals_price, 2)
-        item_data['unit_price'] = base_round(unit_price, 2)
+        item_data['volume_deals_price'] = base_round(volume_deals_price)
+        item_data['unit_price'] = base_round(unit_price)
         item_data["digital_coupon_price"] = 0
  
         return item_data
@@ -61,7 +61,7 @@ class BuyGetDiscountProcessor(PromoProcessor):
             volume_deals_price = (price * quantity) - ((price * quantity) * (discount_percentage / 100))
             unit_price = volume_deals_price / quantity
 
-        item_data['digital_coupon_price'] = base_round(volume_deals_price, 2)
-        item_data['unit_price'] = base_round(unit_price, 2)
+        item_data['digital_coupon_price'] = base_round(volume_deals_price)
+        item_data['unit_price'] = base_round(unit_price)
         
         return item_data

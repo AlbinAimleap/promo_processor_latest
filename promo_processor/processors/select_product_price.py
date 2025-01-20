@@ -13,8 +13,8 @@ class SelectProductPriceProcessor(PromoProcessor):
         select_price = float(match.group('price'))
         weight = item_data.get('weight', 1)
         
-        item_data["volume_deals_price"] = base_round(select_price, 2)
-        item_data["unit_price"] = base_round(select_price / 1, 2)
+        item_data["volume_deals_price"] = base_round(select_price)
+        item_data["unit_price"] = base_round(select_price / 1)
         item_data["digital_coupon_price"] = 0
         
 
@@ -24,8 +24,8 @@ class SelectProductPriceProcessor(PromoProcessor):
         select_price = float(match.group('price'))
         weight = item_data.get('weight', 1)
         
-        item_data["unit_price"] = base_round(select_price / 1, 2)
-        item_data["digital_coupon_price"] = base_round(select_price, 2)
+        item_data["unit_price"] = base_round(select_price / 1)
+        item_data["digital_coupon_price"] = base_round(select_price)
         return item_data
         
        

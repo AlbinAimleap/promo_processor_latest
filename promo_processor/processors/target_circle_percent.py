@@ -24,6 +24,6 @@ class TargetCirclePercentProcessor(PromoProcessor):
         discount_amount = base_price * (discount_percent / 100)
         final_price = base_price - discount_amount
     
-        item_data["digital_coupon_price"] = base_round(discount_amount, 2)
-        item_data["unit_price"] = base_round(final_price, 2)
+        item_data["digital_coupon_price"] = base_round(discount_amount)
+        item_data["unit_price"] = base_round(final_price)
         return item_data

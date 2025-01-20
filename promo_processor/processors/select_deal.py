@@ -12,8 +12,8 @@ class SelectDealProcessor(PromoProcessor):
         item_data = item.copy()
         select_price = float(match.group('price'))
         
-        item_data["volume_deals_price"] = base_round(select_price, 2)
-        item_data["unit_price"] = base_round(select_price, 2)
+        item_data["volume_deals_price"] = base_round(select_price)
+        item_data["unit_price"] = base_round(select_price)
         item_data["digital_coupon_price"] = 0
         return item_data
         
@@ -24,7 +24,7 @@ class SelectDealProcessor(PromoProcessor):
         select_price = float(match.group('price'))
         unit_price = (item_data.get('unit_price') or item_data.get('sale_price') or item_data.get('regular_price', 0) if item.get("many") else item_data.get("sale_price") or item_data.get("regular_price", 0)) - select_price
         
-        item_data["unit_price"] = base_round(unit_price, 2)
-        item_data["digital_coupon_price"] = base_round(select_price, 2)
+        item_data["unit_price"] = base_round(unit_price)
+        item_data["digital_coupon_price"] = base_round(select_price)
         return item_data
         

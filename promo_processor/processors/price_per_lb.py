@@ -22,8 +22,8 @@ class BasicPricePerLbProcessor(PromoProcessor, version=1):
         if weight:
             weight = float(weight)
             total_price = price_per_lb * weight
-            item_data["volume_deals_price"] = base_round(price_per_lb, 2)
-            item_data["unit_price"] = base_round(price_per_lb, 2)
+            item_data["volume_deals_price"] = base_round(price_per_lb)
+            item_data["unit_price"] = base_round(price_per_lb)
             item_data["digital_coupon_price"] = 0
 
         return item_data
@@ -41,8 +41,8 @@ class BasicPricePerLbProcessor(PromoProcessor, version=1):
         if weight:
             weight = float(weight)
             coupon_savings = price_per_lb * weight
-            item_data["digital_coupon_price"] = base_round(price_per_lb, 2)
-            item_data["unit_price"] = base_round(price_per_lb, 2)
+            item_data["digital_coupon_price"] = base_round(price_per_lb)
+            item_data["unit_price"] = base_round(price_per_lb)
 
         return item_data
 
@@ -70,15 +70,15 @@ class SaveUpToPricePerLbProcessor(PromoProcessor, version=2):
         if weight:
             weight = float(weight)
             total_price = price_per_lb / weight
-            item_data["volume_deals_price"] = base_round(total_price, 2)
-            item_data["unit_price"] = base_round(price_per_lb * weight, 2)
+            item_data["volume_deals_price"] = base_round(total_price)
+            item_data["unit_price"] = base_round(price_per_lb * weight)
             item_data["digital_coupon_price"] = 0
 
             savings_per_lb = float(match.group('savings'))
-            item_data["volume_deals_price"] = base_round(savings_per_lb * weight, 2)
+            item_data["volume_deals_price"] = base_round(savings_per_lb * weight)
         else:
-            item_data["volume_deals_price"] = base_round(price_per_lb, 2)
-            item_data["unit_price"] = base_round(price_per_lb, 2)
+            item_data["volume_deals_price"] = base_round(price_per_lb)
+            item_data["unit_price"] = base_round(price_per_lb)
             item_data["digital_coupon_price"] = 0
 
 
@@ -97,7 +97,7 @@ class SaveUpToPricePerLbProcessor(PromoProcessor, version=2):
             weight = float(weight)
             savings_per_lb = float(match.group('savings'))
             coupon_savings = savings_per_lb * weight
-            item_data["digital_coupon_price"] = base_round(price_per_lb, 2)
-            item_data["unit_price"] = base_round(item_data['unit_price'] - coupon_savings, 2)
+            item_data["digital_coupon_price"] = base_round(price_per_lb)
+            item_data["unit_price"] = base_round(item_data['unit_price'] - coupon_savings)
 
         return item_data

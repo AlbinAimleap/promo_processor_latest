@@ -19,8 +19,8 @@ class GiftCardProcessor(PromoProcessor, version=1):
         total_price = price * quantity
         discounted_price = total_price - discount
         unit_price = discounted_price / quantity
-        item_data["volume_deals_price"] = base_round(discount, 2)
-        item_data["unit_price"] = base_round(unit_price, 2)
+        item_data["volume_deals_price"] = base_round(discount)
+        item_data["unit_price"] = base_round(unit_price)
         item_data["digital_coupon_price"] = 0
         return item_data
     
@@ -34,7 +34,7 @@ class GiftCardProcessor(PromoProcessor, version=1):
         discounted_price = total_price - discount
         unit_price = discounted_price / quantity
         
-        item_data["unit_price"] = base_round(unit_price, 2)
+        item_data["unit_price"] = base_round(unit_price)
         item_data["digital_coupon_price"] = discount
         return item_data
 
@@ -56,8 +56,8 @@ class GiftCardPurchaseProcessor(PromoProcessor, version=2):
         
         unit_price = price - (price * discount_rate)
         
-        item_data["volume_deals_price"] = base_round(unit_price, 2)
-        item_data["unit_price"] = base_round(unit_price, 2)
+        item_data["volume_deals_price"] = base_round(unit_price)
+        item_data["unit_price"] = base_round(unit_price)
         item_data["digital_coupon_price"] = 0
         return item_data
     
@@ -73,8 +73,8 @@ class GiftCardPurchaseProcessor(PromoProcessor, version=2):
         
         unit_price = price - (price * discount_rate)
         
-        item_data["unit_price"] = base_round(unit_price, 2)
-        item_data["digital_coupon_price"] = base_round(discount_value, 2)
+        item_data["unit_price"] = base_round(unit_price)
+        item_data["digital_coupon_price"] = base_round(discount_value)
         return item_data
 
 
@@ -93,8 +93,8 @@ class SimpleGiftCardProcessor(PromoProcessor, version=3):
         discount = (price * quantity) - discount_value
         unit_price = discount / quantity
         
-        item_data["volume_deals_price"] = base_round(discount, 2)
-        item_data["unit_price"] = base_round(unit_price, 2)
+        item_data["volume_deals_price"] = base_round(discount)
+        item_data["unit_price"] = base_round(unit_price)
         item_data["digital_coupon_price"] = 0
         return item_data
     
@@ -108,8 +108,8 @@ class SimpleGiftCardProcessor(PromoProcessor, version=3):
         discount = (price * quantity) - discount_value
         unit_price = discount / quantity
         
-        item_data["unit_price"] = base_round(unit_price, 2)
-        item_data["digital_coupon_price"] = base_round(discount_value, 2)
+        item_data["unit_price"] = base_round(unit_price)
+        item_data["digital_coupon_price"] = base_round(discount_value)
         return item_data
 
 

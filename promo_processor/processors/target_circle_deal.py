@@ -29,6 +29,6 @@ class TargetCircleDealProcessor(PromoProcessor):
     
         unit_price = final_price / (buy_qty + get_qty)
     
-        item_data["digital_coupon_price"] = base_round(discount_amount, 2)
-        item_data["unit_price"] = base_round(unit_price, 2)
+        item_data["digital_coupon_price"] = base_round(discount_amount)
+        item_data["unit_price"] = base_round(unit_price)
         return item_data

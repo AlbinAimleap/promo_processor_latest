@@ -17,8 +17,8 @@ class PercentageOffProcessor(PromoProcessor, version=1):
         discounted_price = price * (1 - discount_decimal)
         unit_price = discounted_price
         
-        item_data["volume_deals_price"] = base_round(discounted_price, 2)
-        item_data["unit_price"] = base_round(unit_price, 2)
+        item_data["volume_deals_price"] = base_round(discounted_price)
+        item_data["unit_price"] = base_round(unit_price)
         item_data["digital_coupon_price"] = 0
         return item_data
         
@@ -31,8 +31,8 @@ class PercentageOffProcessor(PromoProcessor, version=1):
         
         discounted_price = base_price * (1 - discount_decimal)
         
-        item_data["unit_price"] = base_round(discounted_price, 2)
-        item_data["digital_coupon_price"] = base_round(discounted_price, 2)
+        item_data["unit_price"] = base_round(discounted_price)
+        item_data["digital_coupon_price"] = base_round(discounted_price)
         return item_data
 
 class PercentageOffProductProcessor(PromoProcessor, version=2):
@@ -51,8 +51,8 @@ class PercentageOffProductProcessor(PromoProcessor, version=2):
         discounted_price = price * (1 - discount_decimal)
         unit_price = discounted_price
         
-        item_data["volume_deals_price"] = base_round(discounted_price, 2)
-        item_data["unit_price"] = base_round(unit_price, 2)
+        item_data["volume_deals_price"] = base_round(discounted_price)
+        item_data["unit_price"] = base_round(unit_price)
         item_data["digital_coupon_price"] = 0
         return item_data
         
@@ -65,8 +65,8 @@ class PercentageOffProductProcessor(PromoProcessor, version=2):
         
         discounted_price = base_price * (1 - discount_decimal)
         
-        item_data["unit_price"] = base_round(discounted_price, 2)
-        item_data["digital_coupon_price"] = base_round(discounted_price, 2)
+        item_data["unit_price"] = base_round(discounted_price)
+        item_data["digital_coupon_price"] = base_round(discounted_price)
         return item_data
 
 class PercentageOffQuantityProcessor(PromoProcessor, version=3):
@@ -92,8 +92,8 @@ class PercentageOffQuantityProcessor(PromoProcessor, version=3):
             discounted_price = total_price * (1 - discount_decimal)
             unit_price = discounted_price / quantity
         
-        item_data["volume_deals_price"] = base_round(discounted_price, 2)
-        item_data["unit_price"] = base_round(unit_price, 2)
+        item_data["volume_deals_price"] = base_round(discounted_price)
+        item_data["unit_price"] = base_round(unit_price)
         item_data["digital_coupon_price"] = 0
         return item_data
         
@@ -106,8 +106,8 @@ class PercentageOffQuantityProcessor(PromoProcessor, version=3):
         
         discounted_price = base_price * (1 - discount_decimal)
         
-        item_data["unit_price"] = base_round(discounted_price, 2)
-        item_data["digital_coupon_price"] = base_round(discounted_price, 2)
+        item_data["unit_price"] = base_round(discounted_price)
+        item_data["digital_coupon_price"] = base_round(discounted_price)
         return item_data
 
 
@@ -125,8 +125,8 @@ class PercentageOffSelectProcessor(PromoProcessor, version=4):
         
         discounted_price = price * (1 - discount_decimal)
         
-        item_data["volume_deals_price"] = base_round(discounted_price, 2)
-        item_data["unit_price"] = base_round(discounted_price, 2)
+        item_data["volume_deals_price"] = base_round(discounted_price)
+        item_data["unit_price"] = base_round(discounted_price)
         item_data["digital_coupon_price"] = 0
         return item_data
         
@@ -139,8 +139,8 @@ class PercentageOffSelectProcessor(PromoProcessor, version=4):
         
         discounted_price = base_price * (1 - discount_decimal)
         
-        item_data["unit_price"] = base_round(discounted_price, 2)
-        item_data["digital_coupon_price"] = base_round(discounted_price, 2)
+        item_data["unit_price"] = base_round(discounted_price)
+        item_data["digital_coupon_price"] = base_round(discounted_price)
         return item_data
 
 
@@ -162,8 +162,8 @@ class PercentageOffSaveProcessor(PromoProcessor, version=5):
         total_price = price * limit
         discounted_price = total_price - (total_price * discount_decimal)
         
-        item_data["volume_deals_price"] = base_round(discounted_price, 2)
-        item_data["unit_price"] = base_round(discounted_price / limit, 2)
+        item_data["volume_deals_price"] = base_round(discounted_price)
+        item_data["unit_price"] = base_round(discounted_price / limit)
         item_data["digital_coupon_price"] = 0
         return item_data
         
@@ -178,6 +178,6 @@ class PercentageOffSaveProcessor(PromoProcessor, version=5):
         total_price = base_price * limit
         discounted_price = total_price - (total_price * discount_decimal)
         
-        item_data["unit_price"] = base_round(discounted_price / limit, 2)
-        item_data["digital_coupon_price"] = base_round(total_price * discount_decimal, 2)
+        item_data["unit_price"] = base_round(discounted_price / limit)
+        item_data["digital_coupon_price"] = base_round(total_price * discount_decimal)
         return item_data

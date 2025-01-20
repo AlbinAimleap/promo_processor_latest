@@ -14,8 +14,8 @@ class PriceEachWithQuantityProcessor(PromoProcessor):
         price_each = float(match.group('price'))
         quantity = int(match.group('quantity'))
         
-        item_data["volume_deals_price"] = base_round(price_each, 2)
-        item_data["unit_price"] = base_round(price_each, 2)
+        item_data["volume_deals_price"] = base_round(price_each)
+        item_data["unit_price"] = base_round(price_each)
         item_data["digital_coupon_price"] = 0
         return item_data
 
@@ -25,8 +25,8 @@ class PriceEachWithQuantityProcessor(PromoProcessor):
         price_each = float(match.group('price'))
         quantity = int(match.group('quantity'))
         
-        item_data["unit_price"] = base_round(price_each, 2)
-        item_data["digital_coupon_price"] = base_round(price_each, 2)
+        item_data["unit_price"] = base_round(price_each)
+        item_data["digital_coupon_price"] = base_round(price_each)
         return item_data
         
         

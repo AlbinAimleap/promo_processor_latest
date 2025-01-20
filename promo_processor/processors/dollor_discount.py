@@ -16,8 +16,8 @@ class DollarDiscountProcessor(PromoProcessor, version=1):
         price = item_data.get("sale_price") or item_data.get("regular_price", 0)
         volume_deals_price = price - discount_value
         
-        item_data["volume_deals_price"] = base_round(volume_deals_price, 2)
-        item_data["unit_price"] = base_round(volume_deals_price, 2)
+        item_data["volume_deals_price"] = base_round(volume_deals_price)
+        item_data["unit_price"] = base_round(volume_deals_price)
         item_data["digital_coupon_price"] = 0
         item_data["quantity"] = 1
         return item_data
@@ -29,8 +29,8 @@ class DollarDiscountProcessor(PromoProcessor, version=1):
         price = item_data.get("sale_price") or item_data.get("regular_price", 0)
         unit_price = price - discount_value
             
-        item_data["unit_price"] = base_round(unit_price, 2)
-        item_data["digital_coupon_price"] = base_round(discount_value, 2)
+        item_data["unit_price"] = base_round(unit_price)
+        item_data["digital_coupon_price"] = base_round(discount_value)
         item_data["quantity"] = 1
         return item_data
 
@@ -50,8 +50,8 @@ class DollarDiscountQuantityProcessor(PromoProcessor, version=2):
         price = item_data.get("sale_price") or item_data.get("regular_price", 0)
         volume_deals_price = (price * quantity - discount_value) / quantity
         
-        item_data["volume_deals_price"] = base_round(volume_deals_price, 2)
-        item_data["unit_price"] = base_round(volume_deals_price, 2)
+        item_data["volume_deals_price"] = base_round(volume_deals_price)
+        item_data["unit_price"] = base_round(volume_deals_price)
         item_data["digital_coupon_price"] = 0
         item_data["quantity"] = quantity
         return item_data
@@ -69,8 +69,8 @@ class DollarDiscountQuantityProcessor(PromoProcessor, version=2):
         else:
             unit_price = price - (discount_value / quantity)
             
-        item_data["unit_price"] = base_round(unit_price, 2)
-        item_data["digital_coupon_price"] = base_round(discount_value, 2)
+        item_data["unit_price"] = base_round(unit_price)
+        item_data["digital_coupon_price"] = base_round(discount_value)
         item_data["quantity"] = quantity
         return item_data
 
@@ -90,8 +90,8 @@ class DollarDiscountLimitProcessor(PromoProcessor, version=3):
         price = item_data.get("sale_price") or item_data.get("regular_price", 0)
         volume_deals_price = price - (discount_value / limit)
         
-        item_data["volume_deals_price"] = base_round(volume_deals_price, 2)
-        item_data["unit_price"] = base_round(volume_deals_price, 2)
+        item_data["volume_deals_price"] = base_round(volume_deals_price)
+        item_data["unit_price"] = base_round(volume_deals_price)
         item_data["digital_coupon_price"] = 0
         item_data["quantity"] = limit
         return item_data
@@ -104,8 +104,8 @@ class DollarDiscountLimitProcessor(PromoProcessor, version=3):
         price = item_data.get("sale_price") or item_data.get("regular_price", 0)
         unit_price = price - (discount_value / limit)
             
-        item_data["unit_price"] = base_round(unit_price, 2)
-        item_data["digital_coupon_price"] = base_round(discount_value, 2)
+        item_data["unit_price"] = base_round(unit_price)
+        item_data["digital_coupon_price"] = base_round(discount_value)
         item_data["quantity"] = limit
         return item_data
 
@@ -127,8 +127,8 @@ class BuyNGetMDiscountProcessor(PromoProcessor, version=4):
         total_quantity = buy_quantity + get_quantity
         volume_deals_price = (price * total_quantity - discount_value) / total_quantity
         
-        item_data["volume_deals_price"] = base_round(volume_deals_price, 2)
-        item_data["unit_price"] = base_round(volume_deals_price, 2)
+        item_data["volume_deals_price"] = base_round(volume_deals_price)
+        item_data["unit_price"] = base_round(volume_deals_price)
         item_data["digital_coupon_price"] = 0
         item_data["quantity"] = total_quantity
         return item_data
@@ -143,7 +143,7 @@ class BuyNGetMDiscountProcessor(PromoProcessor, version=4):
         total_quantity = buy_quantity + get_quantity
         unit_price = price - (discount_value / total_quantity)
             
-        item_data["unit_price"] = base_round(unit_price, 2)
-        item_data["digital_coupon_price"] = base_round(discount_value / total_quantity, 2)
+        item_data["unit_price"] = base_round(unit_price)
+        item_data["digital_coupon_price"] = base_round(discount_value / total_quantity)
         item_data["quantity"] = total_quantity
         return item_data

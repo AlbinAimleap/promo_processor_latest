@@ -19,8 +19,8 @@ class BuyGetFreeProcessor(PromoProcessor, version=1):
         volume_deals_price = price * quantity
         unit_price = volume_deals_price / total_quantity if total_quantity > 0 else 1
         
-        item_data['volume_deals_price'] = base_round(volume_deals_price, 2)
-        item_data['unit_price'] = base_round(unit_price, 2)
+        item_data['volume_deals_price'] = base_round(volume_deals_price)
+        item_data['unit_price'] = base_round(unit_price)
         item_data['digital_coupon_price'] = 0
         
         return item_data
@@ -38,8 +38,8 @@ class BuyGetFreeProcessor(PromoProcessor, version=1):
         volume_deals_price = price * quantity
         unit_price = volume_deals_price / total_quantity
         
-        item_data['unit_price'] = base_round(unit_price, 2)
-        item_data['digital_coupon_price'] = base_round(volume_deals_price, 2)
+        item_data['unit_price'] = base_round(unit_price)
+        item_data['digital_coupon_price'] = base_round(volume_deals_price)
         
         return item_data
 
@@ -61,8 +61,8 @@ class BuyGetDiscountProcessor(PromoProcessor, version=2):
         unit_price = volume_deals_price / (quantity + free)
        
         
-        item_data['volume_deals_price'] = base_round(volume_deals_price, 2)
-        item_data['unit_price'] = base_round(unit_price, 2)
+        item_data['volume_deals_price'] = base_round(volume_deals_price)
+        item_data['unit_price'] = base_round(unit_price)
         item_data['digital_coupon_price'] = 0
         
         return item_data
@@ -78,8 +78,8 @@ class BuyGetDiscountProcessor(PromoProcessor, version=2):
         digital_coupon_price = price + price - (price * (discount / 100))
         unit_price = digital_coupon_price / (quantity + free)
         
-        item_data['unit_price'] = base_round(unit_price, 2)
-        item_data['digital_coupon_price'] = base_round(digital_coupon_price, 2)
+        item_data['unit_price'] = base_round(unit_price)
+        item_data['digital_coupon_price'] = base_round(digital_coupon_price)
         
         return item_data
     
@@ -107,8 +107,8 @@ class SpendGetFreeProcessor(PromoProcessor, version=3):
             volume_deals_price = total_price
             unit_price = price / (quantity_needed+free)
             
-        item_data['volume_deals_price'] = base_round(volume_deals_price, 2)
-        item_data['unit_price'] = base_round(unit_price, 2)
+        item_data['volume_deals_price'] = base_round(volume_deals_price)
+        item_data['unit_price'] = base_round(unit_price)
         item_data['digital_coupon_price'] = 0
         
         return item_data
@@ -130,7 +130,7 @@ class SpendGetFreeProcessor(PromoProcessor, version=3):
             volume_deals_price = total_price
             unit_price = price / (quantity_needed+free)
             
-        item_data['unit_price'] = base_round(unit_price, 2)
-        item_data['digital_coupon_price'] = base_round(volume_deals_price, 2)
+        item_data['unit_price'] = base_round(unit_price)
+        item_data['digital_coupon_price'] = base_round(volume_deals_price)
         
         return item_data
