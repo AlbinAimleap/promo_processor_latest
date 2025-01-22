@@ -1,13 +1,15 @@
 import re
-
+from promo_processor import base_round
 class Jewel:
     def __init__(self, processor, df):
         self.processor = processor
-        self.processor.pre_process(self.split_promos)
+        self.processor.pre_process(self.split_promos_deals)
+        self.processor.pre_process(self.split_promos_coupons)
         self.processor.process_item(df)
         self.processor.apply(self.reorder_item)
         self.processor.apply(self.skip_invalids)
         self.processor.apply(self.get_lowest_unit_price)
+        self.processor.apply(self.format_rounding)
         self.processor.apply(self.format_zeros)
         
 
@@ -31,7 +33,20 @@ class Jewel:
         ]
         return [{key: item.get(key, "") for key in order} for item in data if item]
 
-    def split_promos(self, data):
+    def split_promos_deals(self, data):
+        new_data = []
+        for item in data:
+            if not item["volume_deals_description"]:
+                new_data.append(item.copy())
+                continue
+            promos = item["volume_deals_description"].split("||")
+            for promo in promos:
+                item["volume_deals_description"] = promo.strip()
+                item["many"] = True
+                new_data.append(item.copy())
+        return new_data
+
+    def split_promos_coupons(self, data):
         new_data = []
         for item in data:
             if not item["digital_coupon_description"]:
@@ -43,7 +58,7 @@ class Jewel:
                 item["many"] = True
                 new_data.append(item.copy())
         return new_data
-
+    
     def get_lowest_unit_price(self, data):
         if not data:
             return data
@@ -83,4 +98,10 @@ class Jewel:
                     item[key] = ""
         return data
 
-   
+    def format_rounding(self, data):
+        keys = ["regular_price", "sale_price"]
+        for item in data:
+            for key in keys:
+                if not isinstance(item[key],str):
+                    item[key] = base_round(item[key])
+        return data

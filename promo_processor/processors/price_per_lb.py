@@ -69,8 +69,7 @@ class SaveUpToPricePerLbProcessor(PromoProcessor, version=2):
 
         if weight:
             weight = float(weight)
-            total_price = price_per_lb / weight
-            item_data["volume_deals_price"] = base_round(total_price)
+            item_data["volume_deals_price"] = base_round(price_per_lb * weight)
             item_data["unit_price"] = base_round(price_per_lb * weight)
             item_data["digital_coupon_price"] = 0
 

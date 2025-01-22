@@ -1,0 +1,1 @@
+Add\s+(?P<quantity>\d+)\s+Total\s+For\s+Offer
