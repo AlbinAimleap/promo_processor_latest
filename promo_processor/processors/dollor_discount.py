@@ -36,9 +36,10 @@ class DollarDiscountProcessor(PromoProcessor, version=1):
 
 class DollarDiscountQuantityProcessor(PromoProcessor, version=2):
     """Processor for handling '$X off when buy Y' type promotions."""
-    
+    #$5.00 OFF Coca Cola Minis when you buy ONE(1)
     patterns = [
         r'\$(?P<discount>\d+(?:\.\d+)?)\s+off\s+when\s+buy\s+(?P<quantity>\d+)(?:\s+limit\s+(?P<limit>\d+))?',
+        r'\$(?P<discount>\d+(?:\.\d+)?)\s+OFF.*when\s+(?:you\s+)?buy\s+\w+\((?P<quantity>\d+)\)',
         ]
     
     def calculate_deal(self, item, match):
