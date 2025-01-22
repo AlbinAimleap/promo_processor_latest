@@ -37,7 +37,7 @@ class CouponDiscountProcessor(PromoProcessor):
 class AddtionalDiscountProcessor(PromoProcessor,version=2):
     #Additional 25% off When you spend $10 When you spend $10 or more on participating items
     patterns = [
-        r"Additional\s+(?P<discount>\d+)%\soff\s++when\s+you\s+spend\s+\$(?P<price>\d+)\s"
+        # r"Additional\s+(?P<discount>\d+)%\soff\s++when\s+you\s+spend\s+\$(?P<price>\d+)\s"
     ]
     
     

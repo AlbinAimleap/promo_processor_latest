@@ -5,7 +5,7 @@ class DollarDiscountProcessor(PromoProcessor, version=1):
     """Processor for handling '$X off' type promotions."""
     
     patterns = [
-        r'\$(?P<discount>\d+(?:\.\d+)?)\s+off'
+        r'^\$(?P<discount>\d+(?:\.\d+)?)\s+off$'
     ]
     
     def calculate_deal(self, item, match):
@@ -38,8 +38,8 @@ class DollarDiscountQuantityProcessor(PromoProcessor, version=2):
     """Processor for handling '$X off when buy Y' type promotions."""
     
     patterns = [
-        r'\$(?P<discount>\d+(?:\.\d+)?)\s+off\s+when\s+buy\s+(?P<quantity>\d+)(?:\s+limit\s+(?P<limit>\d+))?'
-    ]
+        r'\$(?P<discount>\d+(?:\.\d+)?)\s+off\s+when\s+buy\s+(?P<quantity>\d+)(?:\s+limit\s+(?P<limit>\d+))?',
+        ]
     
     def calculate_deal(self, item, match):
         """Process '$X off when buy Y' type promotions for deals."""

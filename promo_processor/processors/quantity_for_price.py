@@ -3,7 +3,7 @@ from promo_processor import base_round
 
 class QuantityForPriceProcessor(PromoProcessor):
     patterns = [
-        r"(?P<quantity>\d+)\s+For\s+\$(?P<volume_deals_price>\d+(?:\.\d+)?)",
+        r"^(?P<quantity>\d+)\s+For\s+\$(?P<volume_deals_price>\d+(?:\.\d+)?)",
         r"Buy\s+(?P<quantity>\d+)\s+for\s+\$(?P<volume_deals_price>\d+(?:\.\d+)?)"
     ]
      

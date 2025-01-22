@@ -87,7 +87,7 @@ class BuyGetDiscountProcessor(PromoProcessor, version=2):
 class SpendGetFreeProcessor(PromoProcessor, version=3):
     #Spend $10 Get 1 Free
     patterns = [
-        r"Spend\s+\$(?P<price>\d+),?\s+Get\s+(?P<free>\d+)\s+Free"
+        #r"Spend\s+\$(?P<price>\d+),?\s+Get\s+(?P<free>\d+)\s+Free"
     ]
     
     def calculate_deal(self, item, match):

@@ -3,7 +3,9 @@ from promo_processor import base_round
 class AddTotalForOffer(PromoProcessor, version=1):
     """Processor for 'Add 2 Total For Offer' type promotions."""
     
-    patterns = [r"(?i)\bAdd\s*(?P<quantity>\d+)\s*Total\s*For\s*Offer\b"]    
+    patterns = [
+        #r"(?i)\bAdd\s*(?P<quantity>\d+)\s*Total\s*For\s*Offer"
+    ]    
     def calculate_deal(self, item, match):
         item_data = item.copy()
         price = item_data.get('sale_price') or item_data.get('regular_price')

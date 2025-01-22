@@ -8,9 +8,14 @@ class DollarOffProcessor(PromoProcessor, version=1):
         r'^Save\s+\$(?P<savings>\d+\.\d{2})\s+off\s+(?P<quantity>\d+)\s+',  # Matches "Save $3.00 off 10 ..."
         r'^Save\s+\$(?P<savings>\d+(?:\.\d{2})?)',  # Matches "Save $3.00" or "Save $3"
         r'^\$(?P<savings>\d+\.\d{2})\s+off\s+(?P<size>\d+\.?\d*-\d+\.?\d*-[a-zA-Z]+\.?)',  # Matches "$0.50 off  15.4-21-oz."
-        r'^\$(?P<savings>\d+\.\d{2})\s+off\s+(?P<size>\d+\.?\d*-[a-zA-Z]+\.?)',  # Matches "$0.25 off 15.25-oz."
+        r'^\$(?P<savings>\d+\.\d{2})\s+off\s+(?P<size>\d+-?\.?\d*-[a-zA-Z]+\.?)',  # Matches "$0.25 off 15.25-oz."#$1.00 off 5-.67-oz.
         r'^\$(?P<savings>\d+)\s+Target\s+GiftCard\s+on\s+Crest\s+teeth-whitening\s+strips',  # Matches "$5 Target GiftCard on Crest teeth-whitening strips"
         r'^\$(?P<savings>\d+)\s+Target\s+GiftCard\s+with\s+purchase',  # Matches "$20 Target GiftCard with purchase"
+        r'^Buy\s+(?P<quantity>\d+)\s+candy\s+or\s+cards\s+save\s+\$(?P<savings>\d+(?:\.\d{2})?)\s+on\s+floral',
+        #Buy 2 Candy or Cards Save $5 on Floral
+        r'(?P<savings>\d+(?:\.\d{2})?)\s+off\s+when\s+you\s+buy\s+(?P<quantity_str>\w+)',#$2.00 off When you buy TWO
+        r'(?P<savings>\d+(?:\.\d{2})?)\s+off\s+when\s+you\s+buy\s+a\s+.*',  #$0.75 off When you buy a Ready
+        r'\$(?P<savings>\d+(?:\.\d{2})?)\s+off\s+(?P<product>[\w\s]+)\s+When\s+you\s+buy\s+(?P<accompanying_product>\w+)\s+Buy\s+(?P<quantity_str>\w+)'
     ]    
     def calculate_deal(self, item, match):
         item_data = item.copy()
@@ -37,14 +42,16 @@ class DollarOffProcessor(PromoProcessor, version=1):
         item_data = item.copy()
         price = item_data.get('unit_price') or item_data.get('sale_price') or item_data.get('regular_price', 0) if item.get("many") else item_data.get("sale_price") or item_data.get("regular_price", 0)
         savings_value = float(match.group('savings'))
-        
-        quantity = 1
+        if 'quantity_str' in match.groupdict() and match.group('quantity_str'):
+            quantity = self.NUMBER_MAPPING.get(match.group('quantity_str'))
+        else:
+            quantity = 1
         if 'quantity' in match.groupdict() and match.group('quantity'):
             quantity = float(match.group('quantity'))
             price_for_quantity = price * quantity
             savings_value_for_quantity = price_for_quantity - savings_value
             volume_deals_price = price 
-            unit_price = savings_value_for_quantity / quantity
+            unit_price = savings_value_for_quantity / quantity   
         else:
             volume_deals_price = price - savings_value
             unit_price = volume_deals_price
@@ -56,7 +63,7 @@ class DollarOffProcessor(PromoProcessor, version=1):
 class CentsOffProcessor(PromoProcessor, version=2):
     patterns = [
         r'^Save\s+\$(?P<savings>\.25)\s+',  # Matches "Save $.25 "
-        r'^Save\s+(?P<savings>\d+)¢'  # Matches "Save 70¢"
+        r'^Save\s+(?P<savings>\d+)¢',  # Matches "Save 70¢"
     ]
     
     def calculate_deal(self, item, match):
@@ -171,12 +178,10 @@ class WinePackProcessor(PromoProcessor, version=5):
         quantity = float(match.group('quantity'))
         pack_price = float(match.group('price'))
         savings = float(match.group('savings'))
-        
-        unit_price = pack_price / quantity
-        volume_deals_price = pack_price
+
             
-        item_data["volume_deals_price"] = base_round(volume_deals_price)
-        item_data["unit_price"] = base_round(unit_price)
+        item_data["volume_deals_price"] = base_round(pack_price)
+        item_data["unit_price"] = base_round(pack_price)
         item_data["digital_coupon_price"] = 0
         return item_data
 
@@ -187,9 +192,7 @@ class WinePackProcessor(PromoProcessor, version=5):
         pack_price = float(match.group('price'))
         savings = float(match.group('savings'))
         
-        unit_price = pack_price / quantity
-        
-        item_data["unit_price"] = base_round(unit_price)
+        item_data["unit_price"] = base_round(pack_price)
         item_data["digital_coupon_price"] = base_round(pack_price)
         return item_data
 
@@ -227,7 +230,7 @@ class HealthyAislesProcessor(PromoProcessor, version=6):
 class DollarOffOnMoreProcessor(PromoProcessor, version=7):
     #$1.00 OFF of $1 or more
     patterns = [
-        r'\$(?P<savings>\d+\.\d{2})\s+off\s+of\s+\$(?P<min_price>\d+)\s+or\s+more',  # Matches "$1.00 OFF of $1 or more"
+        # r'\$(?P<savings>\d+\.\d{2})\s+off\s+of\s+\$(?P<min_price>\d+)\s+or\s+more',  # Matches "$1.00 OFF of $1 or more"
     ]    
     def calculate_deal(self, item, match):
         item_data = item.copy()
